@@ -71,13 +71,22 @@ function Projects() {
     }
   };
 
+  const [favoritingIds, setFavoritingIds] = useState<Set<string>>(new Set());
+
   const handleToggleFavorite = async (id: string) => {
+    setFavoritingIds((prev) => new Set(prev).add(id));
     try {
       const res = await projectService.toggleFavorite(id);
       toast.success(res.message);
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      await queryClient.invalidateQueries({ queryKey: ["projects"] });
     } catch (error: any) {
       toast.error("Failed to toggle favorite");
+    } finally {
+      setFavoritingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
     }
   };
 
@@ -132,13 +141,13 @@ function Projects() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2.5">
+          <h1 className="text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2.5">
             <span>Projects</span>
             <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-600/20 text-indigo-400 border border-indigo-500/30">
               {projects.length}
             </span>
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-[var(--text-secondary)] mt-1">
             Manage your API workspaces, microservices, and environment scopes.
           </p>
         </div>
@@ -156,16 +165,16 @@ function Projects() {
       </div>
 
       {/* Filters & Search Toolbar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-slate-900/60 p-2 rounded-xl border border-slate-800">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[var(--card-bg)] p-2 rounded-xl border border-[var(--border-color)]">
         <div className="flex items-center gap-3 flex-wrap">
           {/* Tabs */}
-          <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800 shrink-0">
+          <div className="flex items-center gap-1 bg-[var(--bg-secondary)] p-1 rounded-lg border border-[var(--border-color)] shrink-0">
             <button
               onClick={() => setActiveTab("all")}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
                 activeTab === "all"
                   ? "bg-indigo-600 text-white shadow"
-                  : "text-slate-400 hover:text-slate-200"
+                  : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               }`}
             >
               All Projects
@@ -175,7 +184,7 @@ function Projects() {
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
                 activeTab === "favorites"
                   ? "bg-indigo-600 text-white shadow"
-                  : "text-slate-400 hover:text-slate-200"
+                  : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               }`}
             >
               <Star className="w-3.5 h-3.5 fill-current" />
@@ -197,7 +206,7 @@ function Projects() {
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all cursor-pointer ${
                 isSelectionMode
                   ? "bg-indigo-600/20 text-indigo-400 border-indigo-500/40 hover:bg-indigo-600/30"
-                  : "bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200 hover:bg-slate-900"
+                  : "bg-[var(--bg-secondary)] text-[var(--text-secondary)] border-[var(--border-color)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
               }`}
             >
               <CheckSquare className="w-3.5 h-3.5" />
@@ -207,12 +216,12 @@ function Projects() {
 
           {/* Select All */}
           {isSelectionMode && projects.length > 0 && (
-            <label className="flex items-center gap-2 px-2.5 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-300 cursor-pointer hover:bg-slate-900 transition-colors select-none">
+            <label className="flex items-center gap-2 px-2.5 py-1.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] cursor-pointer hover:bg-[var(--bg-hover)] transition-colors select-none">
               <input
                 type="checkbox"
                 checked={isAllSelected}
                 onChange={handleSelectAll}
-                className="w-4 h-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500 cursor-pointer accent-indigo-600"
+                className="w-4 h-4 rounded border-[var(--border-color)] bg-[var(--input-bg)] text-indigo-600 focus:ring-indigo-500 cursor-pointer accent-indigo-600"
               />
               <span>Select All ({projects.length})</span>
             </label>
@@ -232,13 +241,13 @@ function Projects() {
 
         {/* Search Bar */}
         <div className="relative flex-1 max-w-sm">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search projects by name..."
-            className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+            className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg pl-9 pr-3 py-1.5 text-xs text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-indigo-500 transition-colors"
           />
         </div>
       </div>
@@ -290,6 +299,7 @@ function Projects() {
               key={project._id}
               project={project}
               onToggleFavorite={handleToggleFavorite}
+              isFavoriting={favoritingIds.has(project._id)}
               onEdit={(p) => {
                 setSelectedProject(p);
                 setIsModalOpen(true);

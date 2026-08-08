@@ -9,13 +9,7 @@ function QuickActions() {
     if (path) {
       navigate(path);
     } else {
-      toast.success(`${actionName} action coming soon!`, {
-        style: {
-          background: "#0f172a",
-          color: "#f8fafc",
-          border: "1px solid #1e293b",
-        },
-      });
+      toast.success(`${actionName} action coming soon!`);
     }
   };
 
@@ -44,12 +38,12 @@ function QuickActions() {
   ];
 
   return (
-    <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-6 flex flex-col justify-between h-full">
-      <div className="flex items-center gap-2.5 border-b border-slate-800/80 pb-4 mb-4">
-        <div className="p-1.5 bg-amber-500/10 text-amber-400 rounded-lg">
+    <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl p-6 flex flex-col justify-between h-full">
+      <div className="flex items-center gap-2.5 border-b border-[var(--border-color)] pb-4 mb-4">
+        <div className="p-1.5 bg-amber-500/10 text-amber-500 rounded-lg">
           <Zap className="w-4 h-4" />
         </div>
-        <h3 className="text-base font-semibold text-white">Quick Actions</h3>
+        <h3 className="text-base font-semibold text-[var(--text-primary)]">Quick Actions</h3>
       </div>
 
       <div className="space-y-3 flex-1 flex flex-col justify-center">
@@ -59,16 +53,16 @@ function QuickActions() {
             <button
               key={id}
               onClick={() => handleAction(action.label, action.path)}
-              className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 hover:border-slate-700 text-left transition-all hover:translate-x-1 group cursor-pointer"
+              className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] hover:border-indigo-500/40 text-left transition-all hover:translate-x-1 group cursor-pointer"
             >
               <div className={`p-2.5 rounded-lg bg-gradient-to-r ${action.color} text-white shadow-md transition-transform group-hover:scale-105`}>
                 <Icon className="w-4 h-4" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-slate-200 group-hover:text-white transition-colors">
+                <p className="text-sm font-semibold text-[var(--text-primary)] group-hover:text-indigo-500 transition-colors">
                   {action.label}
                 </p>
-                <p className="text-[11px] text-slate-400">
+                <p className="text-[11px] text-[var(--text-muted)]">
                   {action.description}
                 </p>
               </div>

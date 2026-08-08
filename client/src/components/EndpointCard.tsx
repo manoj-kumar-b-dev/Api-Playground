@@ -10,22 +10,23 @@ interface EndpointCardProps {
   onDuplicate: (id: string) => void;
   onEdit: (endpoint: EndpointData) => void;
   onDelete: (endpoint: EndpointData) => void;
+  isFavoriting?: boolean;
 }
 
 export const getMethodBadgeColor = (method: string) => {
   switch (method?.toUpperCase()) {
     case "GET":
-      return "bg-emerald-500/10 text-emerald-400 border-emerald-500/30";
+      return "bg-emerald-500/10 text-emerald-500 border-emerald-500/30";
     case "POST":
-      return "bg-sky-500/10 text-sky-400 border-sky-500/30";
+      return "bg-sky-500/10 text-sky-500 border-sky-500/30";
     case "PUT":
-      return "bg-amber-500/10 text-amber-400 border-amber-500/30";
+      return "bg-amber-500/10 text-amber-500 border-amber-500/30";
     case "DELETE":
-      return "bg-red-500/10 text-red-400 border-red-500/30";
+      return "bg-red-500/10 text-red-500 border-red-500/30";
     case "PATCH":
-      return "bg-purple-500/10 text-purple-400 border-purple-500/30";
+      return "bg-purple-500/10 text-purple-500 border-purple-500/30";
     default:
-      return "bg-slate-800 text-slate-300 border-slate-700";
+      return "bg-[var(--bg-tertiary)] text-[var(--text-secondary)] border-[var(--border-color)]";
   }
 };
 
@@ -36,12 +37,13 @@ export const EndpointCard: React.FC<EndpointCardProps> = ({
   onDuplicate,
   onEdit,
   onDelete,
+  isFavoriting = false,
 }) => {
   const method = endpoint.request?.method || "GET";
   const url = endpoint.request?.url || "https://api.example.com";
 
   return (
-    <div className="bg-slate-900/80 border border-slate-800 hover:border-indigo-500/40 rounded-xl p-4 transition-all hover:shadow-lg flex items-center justify-between gap-4 group">
+    <div className="bg-[var(--card-bg)] border border-[var(--border-color)] hover:border-indigo-500/40 rounded-xl p-4 transition-all hover:shadow-lg flex items-center justify-between gap-4 group">
       <div
         className="flex items-center gap-3.5 min-w-0 flex-1 cursor-pointer"
         onClick={() => onSelect && onSelect(endpoint)}
@@ -58,7 +60,7 @@ export const EndpointCard: React.FC<EndpointCardProps> = ({
         {/* Info */}
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <h4 className="text-sm font-semibold text-slate-100 group-hover:text-indigo-400 transition-colors truncate">
+            <h4 className="text-sm font-semibold text-[var(--text-primary)] group-hover:text-indigo-500 transition-colors truncate">
               {endpoint.name}
             </h4>
             {endpoint.tags && endpoint.tags.length > 0 && (
@@ -66,7 +68,7 @@ export const EndpointCard: React.FC<EndpointCardProps> = ({
                 {endpoint.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-1.5 py-0.5 rounded bg-slate-800 text-[10px] text-slate-400 border border-slate-700/50"
+                    className="px-1.5 py-0.5 rounded bg-[var(--bg-tertiary)] text-[10px] text-[var(--text-secondary)] border border-[var(--border-color)]"
                   >
                     #{tag}
                   </span>
@@ -74,7 +76,7 @@ export const EndpointCard: React.FC<EndpointCardProps> = ({
               </div>
             )}
           </div>
-          <p className="text-xs font-mono text-slate-400 truncate mt-0.5">
+          <p className="text-xs font-mono text-[var(--text-secondary)] truncate mt-0.5">
             {url}
           </p>
         </div>
@@ -84,6 +86,7 @@ export const EndpointCard: React.FC<EndpointCardProps> = ({
       <div className="flex items-center gap-1 shrink-0">
         <FavoriteButton
           isFavorite={endpoint.favorite}
+          isLoading={isFavoriting}
           onToggle={(e) => {
             e.stopPropagation();
             onToggleFavorite(endpoint._id);
@@ -97,7 +100,7 @@ export const EndpointCard: React.FC<EndpointCardProps> = ({
             onDuplicate(endpoint._id);
           }}
           title="Duplicate Request"
-          className="p-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+          className="p-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] rounded-lg transition-colors cursor-pointer"
         >
           <Copy className="w-3.5 h-3.5" />
         </button>
@@ -108,7 +111,7 @@ export const EndpointCard: React.FC<EndpointCardProps> = ({
             onEdit(endpoint);
           }}
           title="Edit Request"
-          className="p-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+          className="p-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] rounded-lg transition-colors cursor-pointer"
         >
           <Edit2 className="w-3.5 h-3.5" />
         </button>
@@ -119,7 +122,7 @@ export const EndpointCard: React.FC<EndpointCardProps> = ({
             onDelete(endpoint);
           }}
           title="Delete Request"
-          className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
+          className="p-1.5 text-[var(--text-secondary)] hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
         >
           <Trash2 className="w-3.5 h-3.5" />
         </button>

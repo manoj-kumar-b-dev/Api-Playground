@@ -63,8 +63,8 @@ const FolderNode: React.FC<{
       <div
         className={`flex items-center justify-between p-2 rounded-lg transition-colors group cursor-pointer text-xs font-medium ${
           isFolderSelected
-            ? "bg-indigo-600/15 border border-indigo-500/40 text-white"
-            : "hover:bg-slate-800/60 text-slate-200"
+            ? "bg-indigo-500/15 border border-indigo-500/40 text-[var(--text-primary)]"
+            : "hover:bg-[var(--bg-hover)] text-[var(--text-primary)]"
         }`}
       >
         <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -77,7 +77,7 @@ const FolderNode: React.FC<{
                 onToggleSelectFolder(folder._id);
               }}
               onClick={(e) => e.stopPropagation()}
-              className="w-4 h-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500 cursor-pointer accent-indigo-600 shrink-0"
+              className="w-4 h-4 rounded border-[var(--border-color)] bg-[var(--input-bg)] text-indigo-600 focus:ring-indigo-500 cursor-pointer accent-indigo-600 shrink-0"
             />
           )}
 
@@ -92,14 +92,14 @@ const FolderNode: React.FC<{
             }}
           >
             {isOpen ? (
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              <ChevronDown className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" />
             ) : (
-              <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              <ChevronRight className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" />
             )}
             {isOpen ? (
-              <FolderOpen className="w-4 h-4 text-indigo-400 shrink-0" />
+              <FolderOpen className="w-4 h-4 text-indigo-500 shrink-0" />
             ) : (
-              <Folder className="w-4 h-4 text-indigo-400 shrink-0" />
+              <Folder className="w-4 h-4 text-indigo-500 shrink-0" />
             )}
             <span className="truncate">{folder.name}</span>
           </div>
@@ -113,7 +113,7 @@ const FolderNode: React.FC<{
               onAddEndpoint(folder._id);
             }}
             title="Add Endpoint in this folder"
-            className="p-1 hover:text-indigo-400 hover:bg-slate-700/60 rounded transition-colors"
+            className="p-1 hover:text-indigo-500 hover:bg-[var(--bg-tertiary)] rounded transition-colors"
           >
             <Plus className="w-3.5 h-3.5" />
           </button>
@@ -123,7 +123,7 @@ const FolderNode: React.FC<{
               onAddSubfolder(folder._id);
             }}
             title="Create Subfolder"
-            className="p-1 hover:text-indigo-400 hover:bg-slate-700/60 rounded transition-colors"
+            className="p-1 hover:text-indigo-500 hover:bg-[var(--bg-tertiary)] rounded transition-colors"
           >
             <Folder className="w-3.5 h-3.5" />
           </button>
@@ -133,7 +133,7 @@ const FolderNode: React.FC<{
               onRenameFolder(folder);
             }}
             title="Rename Folder"
-            className="p-1 hover:text-slate-200 hover:bg-slate-700/60 rounded transition-colors"
+            className="p-1 hover:text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] rounded transition-colors"
           >
             <Edit2 className="w-3.5 h-3.5" />
           </button>
@@ -143,7 +143,7 @@ const FolderNode: React.FC<{
               onDeleteFolder(folder);
             }}
             title="Delete Folder"
-            className="p-1 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors"
+            className="p-1 hover:text-red-500 hover:bg-red-500/10 rounded transition-colors"
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>
@@ -152,7 +152,7 @@ const FolderNode: React.FC<{
 
       {/* Child Folders & Endpoints */}
       {isOpen && (
-        <div className="pl-4 border-l border-slate-800 space-y-1 ml-3">
+        <div className="pl-4 border-l border-[var(--border-color)] space-y-1 ml-3">
           {folder.folders &&
             folder.folders.map((subfolder) => (
               <FolderNode
@@ -186,8 +186,8 @@ const FolderNode: React.FC<{
                   }}
                   className={`flex items-center justify-between p-1.5 rounded-lg transition-colors cursor-pointer text-xs group ${
                     isEpSelected
-                      ? "bg-indigo-600/15 border border-indigo-500/40"
-                      : "hover:bg-slate-800/80"
+                      ? "bg-indigo-500/15 border border-indigo-500/40"
+                      : "hover:bg-[var(--bg-hover)]"
                   }`}
                 >
                   <div className="flex items-center gap-2 min-w-0">
@@ -200,7 +200,7 @@ const FolderNode: React.FC<{
                           onToggleSelectEndpoint(ep._id);
                         }}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-4 h-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500 cursor-pointer accent-indigo-600 shrink-0"
+                        className="w-4 h-4 rounded border-[var(--border-color)] bg-[var(--input-bg)] text-indigo-600 focus:ring-indigo-500 cursor-pointer accent-indigo-600 shrink-0"
                       />
                     )}
                     <span
@@ -210,7 +210,7 @@ const FolderNode: React.FC<{
                     >
                       {ep.request?.method || "GET"}
                     </span>
-                    <span className="text-slate-300 group-hover:text-indigo-400 transition-colors truncate">
+                    <span className="text-[var(--text-primary)] group-hover:text-indigo-500 transition-colors truncate">
                       {ep.name}
                     </span>
                   </div>
@@ -220,7 +220,7 @@ const FolderNode: React.FC<{
 
           {(!folder.folders || folder.folders.length === 0) &&
             (!folder.endpoints || folder.endpoints.length === 0) && (
-              <div className="py-2 text-[11px] text-slate-500 italic">Empty folder</div>
+              <div className="py-2 text-[11px] text-[var(--text-muted)] italic">Empty folder</div>
             )}
         </div>
       )}
@@ -245,14 +245,14 @@ export const FolderTree: React.FC<FolderTreeProps> = ({
   return (
     <div className="space-y-2">
       {/* Root Level Add Actions */}
-      <div className="flex items-center justify-between px-2 py-1 text-xs text-slate-400 border-b border-slate-800/80 pb-2">
-        <span className="font-semibold text-slate-300">Collection Hierarchy</span>
+      <div className="flex items-center justify-between px-2 py-1 text-xs text-[var(--text-secondary)] border-b border-[var(--border-color)] pb-2">
+        <span className="font-semibold text-[var(--text-primary)]">Collection Hierarchy</span>
         <div className="flex items-center gap-2">
           <button
             onClick={() => onAddSubfolder("")}
-            className="flex items-center gap-1 px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-[11px] transition-colors cursor-pointer"
+            className="flex items-center gap-1 px-2 py-1 bg-[var(--bg-secondary)] hover:bg-[var(--bg-hover)] text-[var(--text-primary)] rounded text-[11px] border border-[var(--border-color)] transition-colors cursor-pointer"
           >
-            <Folder className="w-3 h-3 text-indigo-400" />
+            <Folder className="w-3 h-3 text-indigo-500" />
             <span>New Folder</span>
           </button>
           <button
@@ -285,8 +285,8 @@ export const FolderTree: React.FC<FolderTreeProps> = ({
 
       {/* Render Root Level Endpoints */}
       {rootEndpoints.length > 0 && (
-        <div className="pt-2 border-t border-slate-800/60 space-y-1">
-          <span className="text-[11px] font-medium text-slate-500 px-2 uppercase tracking-wider">
+        <div className="pt-2 border-t border-[var(--border-color)] space-y-1">
+          <span className="text-[11px] font-medium text-[var(--text-muted)] px-2 uppercase tracking-wider">
             Root Endpoints
           </span>
           {rootEndpoints.map((ep) => {
@@ -303,8 +303,8 @@ export const FolderTree: React.FC<FolderTreeProps> = ({
                 }}
                 className={`flex items-center justify-between p-2 rounded-lg transition-colors cursor-pointer text-xs group ${
                   isEpSelected
-                    ? "bg-indigo-600/15 border border-indigo-500/40"
-                    : "hover:bg-slate-800"
+                    ? "bg-indigo-500/15 border border-indigo-500/40"
+                    : "hover:bg-[var(--bg-hover)]"
                 }`}
               >
                 <div className="flex items-center gap-2 min-w-0">
@@ -317,10 +317,10 @@ export const FolderTree: React.FC<FolderTreeProps> = ({
                         onToggleSelectEndpoint(ep._id);
                       }}
                       onClick={(e) => e.stopPropagation()}
-                      className="w-4 h-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500 cursor-pointer accent-indigo-600 shrink-0"
+                      className="w-4 h-4 rounded border-[var(--border-color)] bg-[var(--input-bg)] text-indigo-600 focus:ring-indigo-500 cursor-pointer accent-indigo-600 shrink-0"
                     />
                   )}
-                  <FileCode className="w-3.5 h-3.5 text-slate-500" />
+                  <FileCode className="w-3.5 h-3.5 text-[var(--text-muted)]" />
                   <span
                     className={`px-1.5 py-0.5 text-[10px] font-mono font-bold rounded border ${getMethodBadgeColor(
                       ep.request?.method || "GET"
@@ -328,7 +328,7 @@ export const FolderTree: React.FC<FolderTreeProps> = ({
                   >
                     {ep.request?.method || "GET"}
                   </span>
-                  <span className="text-slate-300 group-hover:text-indigo-400 transition-colors truncate">
+                  <span className="text-[var(--text-primary)] group-hover:text-indigo-500 transition-colors truncate">
                     {ep.name}
                   </span>
                 </div>
@@ -339,7 +339,7 @@ export const FolderTree: React.FC<FolderTreeProps> = ({
       )}
 
       {folders.length === 0 && rootEndpoints.length === 0 && (
-        <div className="p-6 text-center text-xs text-slate-500 border border-dashed border-slate-800 rounded-lg">
+        <div className="p-6 text-center text-xs text-[var(--text-muted)] border border-dashed border-[var(--border-color)] rounded-lg">
           No folders or endpoints yet. Click above to create one.
         </div>
       )}

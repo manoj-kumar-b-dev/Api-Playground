@@ -48,7 +48,7 @@ function StatsCard() {
       value: projectCount,
       icon: FolderKanban,
       change: "Active Workspaces",
-      color: "text-blue-400",
+      color: "text-blue-500",
       bgColor: "bg-blue-500/10 border-blue-500/20",
     },
     {
@@ -56,7 +56,7 @@ function StatsCard() {
       value: endpointCount,
       icon: Code2,
       change: "Configured Endpoints",
-      color: "text-emerald-400",
+      color: "text-emerald-500",
       bgColor: "bg-emerald-500/10 border-emerald-500/20",
     },
     {
@@ -64,7 +64,7 @@ function StatsCard() {
       value: collectionCount,
       icon: Layers,
       change: "API Groups",
-      color: "text-purple-400",
+      color: "text-purple-500",
       bgColor: "bg-purple-500/10 border-purple-500/20",
     },
     {
@@ -72,7 +72,7 @@ function StatsCard() {
       value: favoriteCount,
       icon: Star,
       change: "Starred Endpoints",
-      color: "text-amber-400",
+      color: "text-amber-500",
       bgColor: "bg-amber-500/10 border-amber-500/20",
     },
   ];
@@ -84,10 +84,10 @@ function StatsCard() {
         return (
           <div
             key={idx}
-            className="bg-slate-900/70 border border-slate-800 hover:border-slate-700/80 rounded-xl p-5 transition-all duration-200 hover:shadow-lg hover:shadow-indigo-950/20 group"
+            className="bg-[var(--card-bg)] border border-[var(--border-color)] hover:border-indigo-500/40 rounded-xl p-5 transition-all duration-200 hover:shadow-lg group"
           >
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-medium text-slate-400">
+              <span className="text-xs font-medium text-[var(--text-secondary)]">
                 {stat.title}
               </span>
               <div className={`p-2 rounded-lg border ${stat.bgColor} ${stat.color} transition-transform group-hover:scale-105`}>
@@ -96,10 +96,10 @@ function StatsCard() {
             </div>
 
             <div className="flex items-baseline justify-between">
-              <span className="text-2xl font-bold text-white tracking-tight">
+              <span className="text-2xl font-bold text-[var(--text-primary)] tracking-tight">
                 {stat.value}
               </span>
-              <span className="text-[11px] text-slate-500 font-medium">
+              <span className="text-[11px] text-[var(--text-muted)] font-medium">
                 {stat.change}
               </span>
             </div>

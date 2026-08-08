@@ -1,11 +1,12 @@
 import React from "react";
-import { Star } from "lucide-react";
+import { Star, Loader2 } from "lucide-react";
 
 interface FavoriteButtonProps {
   isFavorite: boolean;
   onToggle: (e: React.MouseEvent) => void;
   size?: "sm" | "md" | "lg";
   className?: string;
+  isLoading?: boolean;
 }
 
 export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
@@ -13,6 +14,7 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   onToggle,
   size = "md",
   className = "",
+  isLoading = false,
 }) => {
   const iconSizes = {
     sm: "w-3.5 h-3.5",
@@ -24,18 +26,23 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
     <button
       type="button"
       onClick={onToggle}
+      disabled={isLoading}
       title={isFavorite ? "Remove from Favorites" : "Add to Favorites"}
-      className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+      className={`p-1.5 rounded-lg transition-all cursor-pointer disabled:cursor-wait disabled:opacity-75 ${
         isFavorite
           ? "text-amber-400 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20"
           : "text-slate-400 hover:text-amber-400 hover:bg-slate-800 border border-transparent"
       } ${className}`}
     >
-      <Star
-        className={`${iconSizes[size]} ${
-          isFavorite ? "fill-amber-400 text-amber-400" : ""
-        }`}
-      />
+      {isLoading ? (
+        <Loader2 className={`${iconSizes[size]} animate-spin text-amber-400`} />
+      ) : (
+        <Star
+          className={`${iconSizes[size]} ${
+            isFavorite ? "fill-amber-400 text-amber-400" : ""
+          }`}
+        />
+      )}
     </button>
   );
 };

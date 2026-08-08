@@ -15,9 +15,8 @@ router.get("/me", protect, (req: AuthenticatedRequest, res: Response) => {
 
   return res.status(200).json({
     success: true,
-    message: "you are accessing protected routes",
-    userId: req.user.id
-  })
+    user: req.user
+  });
 })
 
 export default router;

@@ -55,20 +55,20 @@ export const CollectionModal: React.FC<CollectionModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-      <div className="bg-slate-900 border border-slate-800 rounded-xl max-w-md w-full p-6 shadow-2xl space-y-5">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto p-4 sm:p-6 shadow-2xl space-y-5">
+        <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 rounded-lg">
+            <div className="p-2 bg-indigo-500/10 text-indigo-500 border border-indigo-500/20 rounded-lg">
               <Layers className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-semibold text-white">
+            <h3 className="text-base font-semibold text-[var(--text-primary)]">
               {collection ? "Edit Collection" : "Create New Collection"}
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-200 p-1 rounded-lg hover:bg-slate-800 transition-colors"
+            className="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-hover)] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -76,20 +76,20 @@ export const CollectionModal: React.FC<CollectionModalProps> = ({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-              Select Project <span className="text-red-400">*</span>
+            <label className="block text-xs font-semibold text-[var(--text-primary)] mb-1.5">
+              Select Project <span className="text-red-500">*</span>
             </label>
             <select
               required
               value={projectId}
               onChange={(e) => setProjectId(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors"
+              className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg px-3 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-indigo-500 transition-colors"
             >
-              <option value="" disabled className="bg-slate-900 text-slate-200">
+              <option value="" disabled className="bg-[var(--bg-primary)] text-[var(--text-primary)]">
                 -- Choose Project --
               </option>
               {projects.map((p) => (
-                <option key={p._id} value={p._id} className="bg-slate-900 text-slate-200">
+                <option key={p._id} value={p._id} className="bg-[var(--bg-primary)] text-[var(--text-primary)]">
                   {p.name}
                 </option>
               ))}
@@ -97,8 +97,8 @@ export const CollectionModal: React.FC<CollectionModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-              Collection Name <span className="text-red-400">*</span>
+            <label className="block text-xs font-semibold text-[var(--text-primary)] mb-1.5">
+              Collection Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -106,12 +106,12 @@ export const CollectionModal: React.FC<CollectionModalProps> = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Auth & User Management"
-              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors"
+              className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg px-3 py-2 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-indigo-500 transition-colors"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+            <label className="block text-xs font-semibold text-[var(--text-primary)] mb-1.5">
               Description
             </label>
             <textarea
@@ -119,15 +119,15 @@ export const CollectionModal: React.FC<CollectionModalProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief summary of endpoints inside this collection..."
-              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors resize-none"
+              className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg px-3 py-2 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-indigo-500 transition-colors resize-none"
             />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--border-color)]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 border border-slate-700 rounded-lg transition-colors cursor-pointer"
+              className="px-4 py-2 text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] border border-[var(--border-color)] rounded-lg transition-colors cursor-pointer"
             >
               Cancel
             </button>

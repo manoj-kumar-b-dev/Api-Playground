@@ -1,4 +1,5 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import {
   LayoutDashboard,
   FolderKanban,
@@ -6,7 +7,8 @@ import {
   Code2,
   Settings,
   LogOut,
-  Sparkles
+  Sparkles,
+  X
 } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 
@@ -18,23 +20,46 @@ const navItems = [
   { name: "Settings", path: "/settings", icon: Settings },
 ];
 
-function Sidebar() {
-  const logout = useAuthStore((state) => state.logout);
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
 
-  return (
-    <aside className="w-64 bg-slate-900 text-slate-100 flex flex-col h-full border-r border-slate-800 shrink-0">
+function Sidebar({ isOpen = false, onClose }: SidebarProps) {
+  const logout = useAuthStore((state) => state.logout);
+  const location = useLocation();
+
+  // Close mobile sidebar on route change
+  useEffect(() => {
+    if (onClose) onClose();
+  }, [location.pathname]);
+
+  const sidebarContent = (
+    <div className="flex flex-col h-full bg-[var(--bg-secondary)] text-[var(--text-primary)] border-r border-[var(--border-color)]">
       {/* Brand Header */}
-      <div className="flex items-center gap-3 h-16 px-6 border-b border-slate-800">
-        <div className="p-2 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-xl text-white shadow-lg shadow-indigo-500/20">
-          <Code2 className="w-5 h-5" />
+      <div className="flex items-center justify-between h-16 px-6 border-b border-[var(--border-color)]">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-xl text-white shadow-lg shadow-indigo-500/20">
+            <Code2 className="w-5 h-5" />
+          </div>
+          <div className="flex flex-col">
+            <span className="font-bold text-base tracking-wide text-[var(--text-primary)] flex items-center gap-1.5">
+              API Playground
+              <Sparkles className="w-3.5 h-3.5 text-amber-400 fill-amber-400/20" />
+            </span>
+            <span className="text-[10px] text-[var(--text-secondary)] font-medium">Developer Hub</span>
+          </div>
         </div>
-        <div className="flex flex-col">
-          <span className="font-bold text-base tracking-wide text-white flex items-center gap-1.5">
-            API Playground
-            <Sparkles className="w-3.5 h-3.5 text-amber-400 fill-amber-400/20" />
-          </span>
-          <span className="text-[10px] text-slate-400 font-medium">Developer Hub</span>
-        </div>
+
+        {/* Mobile Close Button */}
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="md:hidden p-1.5 text-[var(--text-secondary)] hover:text-white rounded-lg hover:bg-[var(--bg-hover)] transition-colors cursor-pointer"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {/* Navigation Links */}
@@ -45,10 +70,11 @@ function Sidebar() {
             <NavLink
               key={item.path}
               to={item.path}
+              onClick={onClose}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${isActive
                   ? "bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                  : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
                 }`
               }
             >
@@ -60,20 +86,45 @@ function Sidebar() {
       </nav>
 
       {/* Sidebar Footer with Logout Button */}
-      <div className="p-4 border-t border-slate-800 space-y-3">
+      <div className="p-4 border-t border-[var(--border-color)] space-y-3">
         <button
           onClick={logout}
-          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all cursor-pointer"
+          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-[var(--text-secondary)] hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all cursor-pointer"
         >
           <LogOut className="w-5 h-5" />
           <span>Logout</span>
         </button>
 
-        <div className="pt-2 border-t border-slate-800/60 text-[11px] text-slate-500 flex items-center justify-between px-1">
+        <div className="pt-2 border-t border-[var(--border-light)] text-[11px] text-[var(--text-muted)] flex items-center justify-between px-1">
           <span>v1.0.0</span>
         </div>
       </div>
-    </aside>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex w-64 shrink-0 h-full">
+        {sidebarContent}
+      </aside>
+
+      {/* Mobile Drawer Overlay */}
+      {isOpen && (
+        <div className="fixed inset-0 z-50 md:hidden flex">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-[var(--overlay-bg)] backdrop-blur-sm transition-opacity"
+            onClick={onClose}
+          />
+
+          {/* Sliding Drawer Panel */}
+          <div className="relative w-72 max-w-[80vw] h-full shadow-2xl z-10 animate-in slide-in-from-left duration-200">
+            {sidebarContent}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

@@ -92,13 +92,22 @@ export const ProjectDetails: React.FC = () => {
     }
   };
 
+  const [favoritingIds, setFavoritingIds] = useState<Set<string>>(new Set());
+
   const handleToggleCollectionFavorite = async (colId: string) => {
+    setFavoritingIds((prev) => new Set(prev).add(colId));
     try {
       const res = await collectionService.toggleFavorite(colId);
       toast.success(res.message);
-      queryClient.invalidateQueries({ queryKey: ["collections"] });
+      await queryClient.invalidateQueries({ queryKey: ["collections"] });
     } catch (err) {
       toast.error("Failed to update favorite");
+    } finally {
+      setFavoritingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(colId);
+        return next;
+      });
     }
   };
 
@@ -146,7 +155,7 @@ export const ProjectDetails: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="p-8 text-center text-slate-400 space-y-4">
+      <div className="p-8 text-center text-[var(--text-muted)] space-y-4">
         <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
         <p className="text-sm">Loading project workspace...</p>
       </div>
@@ -176,7 +185,7 @@ export const ProjectDetails: React.FC = () => {
       />
 
       {/* Project Banner Card */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 relative overflow-hidden">
+      <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl p-6 relative overflow-hidden">
         <div
           className="absolute top-0 left-0 right-0 h-1.5"
           style={{ backgroundColor: project.color || "#6366f1" }}
@@ -192,18 +201,18 @@ export const ProjectDetails: React.FC = () => {
             </div>
             <div className="space-y-1">
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold text-white">{project.name}</h1>
+                <h1 className="text-2xl font-bold text-[var(--text-primary)]">{project.name}</h1>
                 {project.favorite && (
-                  <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs flex items-center gap-1 font-medium">
-                    <Star className="w-3 h-3 fill-amber-400" />
+                  <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20 text-xs flex items-center gap-1 font-medium">
+                    <Star className="w-3 h-3 fill-amber-500" />
                     Favorite
                   </span>
                 )}
               </div>
-              <p className="text-sm text-slate-400 max-w-2xl leading-relaxed">
+              <p className="text-sm text-[var(--text-secondary)] max-w-2xl leading-relaxed">
                 {project.description || "No description provided for this project."}
               </p>
-              <div className="flex items-center gap-4 text-xs text-slate-500 pt-2 font-mono">
+              <div className="flex items-center gap-4 text-xs text-[var(--text-muted)] pt-2 font-mono">
                 <span className="flex items-center gap-1.5">
                   <Calendar className="w-3.5 h-3.5" />
                   Created {new Date(project.createdAt).toLocaleDateString()}
@@ -213,15 +222,15 @@ export const ProjectDetails: React.FC = () => {
           </div>
 
           {/* Quick Metrics */}
-          <div className="flex items-center gap-3 shrink-0 bg-slate-950/80 p-3 rounded-xl border border-slate-800">
-            <div className="text-center px-4 border-r border-slate-800">
-              <p className="text-xs text-slate-400">Collections</p>
-              <p className="text-lg font-bold text-slate-100">{collections.length}</p>
+          <div className="flex items-center gap-3 shrink-0 bg-[var(--bg-secondary)] p-3 rounded-xl border border-[var(--border-color)]">
+            <div className="text-center px-4 border-r border-[var(--border-color)]">
+              <p className="text-xs text-[var(--text-secondary)]">Collections</p>
+              <p className="text-lg font-bold text-[var(--text-primary)]">{collections.length}</p>
             </div>
             <div className="text-center px-4">
-              <p className="text-xs text-slate-400">Total Endpoints</p>
-              <p className="text-lg font-bold text-indigo-400">
-                {collections.reduce((acc, c: CollectionData) => acc + (c.endpointsCount || 0), 0)}
+              <p className="text-xs text-[var(--text-secondary)]">Total Endpoints</p>
+              <p className="text-lg font-bold text-indigo-500">
+                {collections.reduce((acc: number, c: CollectionData) => acc + (c.endpointsCount || 0), 0)}
               </p>
             </div>
           </div>
@@ -231,11 +240,11 @@ export const ProjectDetails: React.FC = () => {
       {/* Collections Section Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-bold text-white flex items-center gap-2">
-            <Layers className="w-5 h-5 text-indigo-400" />
+          <h2 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
+            <Layers className="w-5 h-5 text-indigo-500" />
             <span>Project Collections</span>
           </h2>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[var(--text-secondary)]">
             Collections group endpoints and folders under this project.
           </p>
         </div>
@@ -254,7 +263,7 @@ export const ProjectDetails: React.FC = () => {
               className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border transition-all cursor-pointer ${
                 isSelectionMode
                   ? "bg-indigo-600/20 text-indigo-400 border-indigo-500/40 hover:bg-indigo-600/30"
-                  : "bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200 hover:bg-slate-800"
+                  : "bg-[var(--bg-secondary)] text-[var(--text-secondary)] border-[var(--border-color)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
               }`}
             >
               <CheckSquare className="w-3.5 h-3.5" />
@@ -263,12 +272,12 @@ export const ProjectDetails: React.FC = () => {
           )}
 
           {isSelectionMode && collections.length > 0 && (
-            <label className="flex items-center gap-2 px-2.5 py-2 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-300 cursor-pointer hover:bg-slate-800 transition-colors select-none">
+            <label className="flex items-center gap-2 px-2.5 py-2 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] cursor-pointer hover:bg-[var(--bg-hover)] transition-colors select-none">
               <input
                 type="checkbox"
                 checked={isAllSelected}
                 onChange={handleSelectAll}
-                className="w-4 h-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500 cursor-pointer accent-indigo-600"
+                className="w-4 h-4 rounded border-[var(--border-color)] bg-[var(--input-bg)] text-indigo-600 focus:ring-indigo-500 cursor-pointer accent-indigo-600"
               />
               <span>Select All ({collections.length})</span>
             </label>
@@ -316,6 +325,7 @@ export const ProjectDetails: React.FC = () => {
               key={col._id}
               collection={col}
               onToggleFavorite={handleToggleCollectionFavorite}
+              isFavoriting={favoritingIds.has(col._id)}
               onEdit={(c) => {
                 setSelectedCollection(c);
                 setIsCollectionModalOpen(true);

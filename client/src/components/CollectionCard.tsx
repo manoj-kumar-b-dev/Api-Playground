@@ -12,6 +12,7 @@ interface CollectionCardProps {
   isSelectionMode?: boolean;
   isSelected?: boolean;
   onSelectChange?: (id: string, selected: boolean) => void;
+  isFavoriting?: boolean;
 }
 
 export const CollectionCard: React.FC<CollectionCardProps> = ({
@@ -22,6 +23,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
   isSelectionMode = false,
   isSelected = false,
   onSelectChange,
+  isFavoriting = false,
 }) => {
   const navigate = useNavigate();
   const projectObj = typeof collection.projectId === "object" ? collection.projectId : null;
@@ -37,10 +39,10 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
   return (
     <div
       onClick={handleCardClick}
-      className={`bg-slate-900/80 border rounded-xl p-5 transition-all hover:shadow-xl hover:shadow-indigo-500/5 flex flex-col justify-between relative cursor-pointer ${
+      className={`bg-[var(--card-bg)] border rounded-xl p-5 transition-all hover:shadow-xl flex flex-col justify-between relative cursor-pointer ${
         isSelected
-          ? "border-indigo-500 ring-2 ring-indigo-500/40 bg-indigo-950/20"
-          : "border-slate-800 hover:border-indigo-500/40"
+          ? "border-indigo-500 ring-2 ring-indigo-500/40 bg-indigo-500/10"
+          : "border-[var(--border-color)] hover:border-indigo-500/40"
       }`}
     >
       <div>
@@ -55,17 +57,17 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                   onSelectChange(collection._id, e.target.checked);
                 }}
                 onClick={(e) => e.stopPropagation()}
-                className="w-4 h-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500 cursor-pointer accent-indigo-600 shrink-0"
+                className="w-4 h-4 rounded border-[var(--border-color)] bg-[var(--input-bg)] text-indigo-600 focus:ring-indigo-500 cursor-pointer accent-indigo-600 shrink-0"
               />
             )}
-            <div className="p-2.5 bg-indigo-600/10 border border-indigo-500/20 text-indigo-400 rounded-xl flex items-center justify-center shrink-0">
+            <div className="p-2.5 bg-indigo-500/10 border border-indigo-500/20 text-indigo-500 rounded-xl flex items-center justify-center shrink-0">
               <Layers className="w-5 h-5" />
             </div>
             <div>
               <Link
                 to={`/collections/${collection._id}`}
                 onClick={(e) => e.stopPropagation()}
-                className="font-semibold text-base text-slate-100 hover:text-indigo-400 transition-colors line-clamp-1"
+                className="font-semibold text-base text-[var(--text-primary)] hover:text-indigo-500 transition-colors line-clamp-1"
               >
                 {collection.name}
               </Link>
@@ -75,7 +77,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                     className="w-2 h-2 rounded-full"
                     style={{ backgroundColor: projectObj.color || "#6366f1" }}
                   />
-                  <span className="text-[11px] text-slate-400 font-medium truncate max-w-[140px]">
+                  <span className="text-[11px] text-[var(--text-muted)] font-medium truncate max-w-[140px]">
                     {projectObj.name}
                   </span>
                 </div>
@@ -85,6 +87,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
 
           <FavoriteButton
             isFavorite={collection.favorite}
+            isLoading={isFavoriting}
             onToggle={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -93,19 +96,19 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
           />
         </div>
 
-        <p className="text-xs text-slate-400 line-clamp-2 min-h-[32px] mb-4">
+        <p className="text-xs text-[var(--text-secondary)] line-clamp-2 min-h-[32px] mb-4">
           {collection.description || "No description provided."}
         </p>
       </div>
 
-      <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between">
-        <div className="flex items-center gap-4 text-xs text-slate-400">
+      <div className="pt-4 border-t border-[var(--border-color)] flex items-center justify-between">
+        <div className="flex items-center gap-4 text-xs text-[var(--text-secondary)]">
           <div className="flex items-center gap-1.5" title="Folders">
-            <Folder className="w-3.5 h-3.5 text-slate-500" />
+            <Folder className="w-3.5 h-3.5 text-[var(--text-muted)]" />
             <span>{collection.foldersCount || 0}</span>
           </div>
           <div className="flex items-center gap-1.5" title="Endpoints">
-            <Code2 className="w-3.5 h-3.5 text-slate-500" />
+            <Code2 className="w-3.5 h-3.5 text-[var(--text-muted)]" />
             <span>{collection.endpointsCount || 0}</span>
           </div>
         </div>
@@ -117,7 +120,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
               onEdit(collection);
             }}
             title="Edit Collection"
-            className="p-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+            className="p-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] rounded-lg transition-colors cursor-pointer"
           >
             <Edit2 className="w-4 h-4" />
           </button>
@@ -127,7 +130,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
               onDelete(collection);
             }}
             title="Delete Collection"
-            className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
+            className="p-1.5 text-[var(--text-secondary)] hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -135,7 +138,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
             to={`/collections/${collection._id}`}
             onClick={(e) => e.stopPropagation()}
             title="View Details"
-            className="p-1.5 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-600/20 rounded-lg transition-colors cursor-pointer ml-1"
+            className="p-1.5 text-indigo-500 hover:text-indigo-600 hover:bg-indigo-500/10 rounded-lg transition-colors cursor-pointer ml-1"
           >
             <ArrowRight className="w-4 h-4" />
           </Link>

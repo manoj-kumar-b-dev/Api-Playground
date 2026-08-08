@@ -1,57 +1,98 @@
+import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
+import { useTheme } from "../Context/ThemeContext";
 import { SearchBar } from "../components/SearchBar";
-import { Bell, Sun, User as UserIcon, Code2 } from "lucide-react";
+import { Bell, Sun, Moon, User as UserIcon, Code2, Menu, Search, X } from "lucide-react";
 
-function NavBar() {
+interface NavBarProps {
+  onToggleMobileMenu?: () => void;
+}
+
+function NavBar({ onToggleMobileMenu }: NavBarProps) {
   const user = useAuthStore((state) => state.user);
+  const { theme, toggleTheme } = useTheme();
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
 
   return (
-    <header className="h-16 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 px-6 flex items-center justify-between sticky top-0 z-40">
-      {/* Left: Logo / Branding & SearchBar */}
-      <div className="flex items-center gap-4 flex-1">
-        <div className="flex items-center gap-2.5 sm:hidden">
-          <div className="p-1.5 bg-indigo-600 rounded-lg text-white">
+    <header className="h-16 bg-[var(--bg-secondary)]/80 backdrop-blur-md border-b border-[var(--border-color)] px-4 md:px-6 flex items-center justify-between sticky top-0 z-40">
+      {/* Left: Mobile Menu Toggle & Brand / SearchBar */}
+      <div className="flex items-center gap-3 flex-1 min-w-0">
+        {/* Mobile Hamburger Button */}
+        <button
+          onClick={onToggleMobileMenu}
+          className="md:hidden p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg hover:bg-[var(--bg-hover)] transition-colors cursor-pointer"
+          aria-label="Open menu"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
+        {/* Mobile Brand */}
+        <div className="flex items-center gap-2 md:hidden truncate">
+          <div className="p-1.5 bg-indigo-600 rounded-lg text-white shrink-0">
             <Code2 className="w-4 h-4" />
           </div>
-          <span className="font-bold text-sm text-white">API Playground</span>
+          <span className="font-bold text-sm text-[var(--text-primary)] truncate">API Playground</span>
         </div>
 
-        {/* Global Live Search Bar */}
+        {/* Desktop Search Bar */}
         <div className="hidden md:block w-96">
           <SearchBar />
         </div>
       </div>
 
       {/* Right Controls: Theme Toggle, Notifications, Profile */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {/* Mobile Search Toggle */}
         <button
-          title="Toggle Theme"
-          className="p-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer relative"
+          onClick={() => setShowMobileSearch(!showMobileSearch)}
+          className="md:hidden p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] rounded-lg transition-colors cursor-pointer"
+          title="Search"
         >
-          <Sun className="w-4 h-4" />
+          {showMobileSearch ? <X className="w-4 h-4" /> : <Search className="w-4 h-4" />}
+        </button>
+
+        <button
+          onClick={toggleTheme}
+          title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] rounded-lg transition-colors cursor-pointer relative"
+        >
+          {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
         </button>
 
         <button
           title="Notifications"
-          className="p-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer relative"
+          className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] rounded-lg transition-colors cursor-pointer relative"
         >
           <Bell className="w-4 h-4" />
           <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-indigo-500"></span>
         </button>
 
-        <div className="h-4 w-px bg-slate-800 mx-1"></div>
+        <div className="h-4 w-px bg-[var(--border-color)] mx-0.5 sm:mx-1"></div>
 
         {/* User Profile */}
-        <div className="flex items-center gap-3 px-3 py-1.5 rounded-lg bg-slate-800/60 border border-slate-700/50 hover:bg-slate-800 transition-colors cursor-pointer">
-          <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-medium text-sm shadow-md shadow-indigo-600/20">
-            {user?.name ? user.name[0].toUpperCase() : <UserIcon className="w-4 h-4" />}
+        <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg bg-[var(--bg-hover)] border border-[var(--border-color)] hover:bg-[var(--bg-tertiary)] transition-colors cursor-pointer">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-medium text-xs sm:text-sm shadow-md shadow-indigo-600/20 shrink-0">
+            {user?.name ? (
+              user.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2)
+            ) : user?.email ? (
+              user.email[0].toUpperCase()
+            ) : (
+              <UserIcon className="w-4 h-4" />
+            )}
           </div>
           <div className="text-left hidden sm:block">
-            <p className="text-xs font-semibold text-slate-200">{user?.name || "Developer"}</p>
-            <p className="text-[10px] text-slate-400">{user?.email || "user@example.com"}</p>
+            <p className="text-xs font-semibold text-[var(--text-primary)]">{user?.name || user?.email?.split("@")[0] || "User"}</p>
+            <p className="text-[10px] text-[var(--text-secondary)] truncate max-w-[140px]">{user?.email || "Signed In"}</p>
           </div>
         </div>
       </div>
+
+      {/* Mobile Search Overlay Bar */}
+      {showMobileSearch && (
+        <div className="absolute top-16 left-0 right-0 p-3 bg-[var(--bg-secondary)] border-b border-[var(--border-color)] md:hidden z-50 shadow-xl">
+          <SearchBar />
+        </div>
+      )}
     </header>
   );
 }

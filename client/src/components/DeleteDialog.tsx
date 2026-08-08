@@ -23,17 +23,17 @@ export const DeleteDialog: React.FC<DeleteDialogProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-      <div className="bg-slate-900 border border-slate-800 rounded-xl max-w-md w-full p-6 shadow-2xl space-y-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto p-4 sm:p-6 shadow-2xl space-y-4">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg shrink-0">
+            <div className="p-2.5 bg-red-500/10 border border-red-500/20 text-red-500 rounded-lg shrink-0">
               <AlertTriangle className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-base font-semibold text-white">{title}</h3>
+              <h3 className="text-base font-semibold text-[var(--text-primary)]">{title}</h3>
               {itemTitle && (
-                <p className="text-xs font-mono text-slate-400 mt-0.5 truncate max-w-[240px]">
+                <p className="text-xs font-mono text-[var(--text-muted)] mt-0.5 truncate max-w-[240px]">
                   "{itemTitle}"
                 </p>
               )}
@@ -41,20 +41,20 @@ export const DeleteDialog: React.FC<DeleteDialogProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-200 p-1 rounded-lg hover:bg-slate-800 transition-colors"
+            className="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-hover)] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <p className="text-sm text-slate-300 leading-relaxed">{message}</p>
+        <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{message}</p>
 
         <div className="flex items-center justify-end gap-3 pt-2">
           <button
             type="button"
             onClick={onClose}
             disabled={isDeleting}
-            className="px-4 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 border border-slate-700 rounded-lg transition-colors cursor-pointer"
+            className="px-4 py-2 text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] border border-[var(--border-color)] rounded-lg transition-colors cursor-pointer"
           >
             Cancel
           </button>

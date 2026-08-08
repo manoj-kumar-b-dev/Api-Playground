@@ -12,21 +12,22 @@ import ForgetPassword from './pages/Auth/ForgetPassword';
 import ResetPassword from './pages/Auth/ResetPassword';
 import DashboardLayout from './Layout/DashboardLayout';
 
+import { ThemeProvider } from './Context/ThemeContext';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
-    <>
+    <ThemeProvider>
       <Toaster
         position="top-right"
         toastOptions={{
           duration: 3000,
           style: {
-            background: '#1e293b',
-            color: '#f8fafc',
-            border: '1px solid #334155',
+            background: 'var(--bg-secondary)',
+            color: 'var(--text-primary)',
+            border: '1px solid var(--border-color)',
           },
         }}
       />
@@ -51,7 +52,7 @@ function App() {
         </Route>
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>
-    </>
+    </ThemeProvider>
   );
 }
 

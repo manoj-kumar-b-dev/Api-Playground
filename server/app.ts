@@ -8,6 +8,8 @@ import folderRouter from "./routes/folder.routes";
 import endpointRouter from "./routes/endpoint.routes";
 import searchRouter from "./routes/search.routes";
 import mockRouter from "./routes/mock.routes";
+import proxyRouter from "./routes/proxy.routes";
+import aiRouter from "./routes/ai.routes";
 
 const app = express();
 
@@ -29,5 +31,7 @@ app.use("/api/folders", folderRouter);
 app.use("/api/endpoints", endpointRouter);
 app.use("/api/search", searchRouter);
 app.use("/api/mock", mockRouter);
+app.use("/api/proxy", proxyRouter);
+app.use("/api/ai", aiRouter);
 
 export default app;

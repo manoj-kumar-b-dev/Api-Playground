@@ -12,6 +12,7 @@ interface ProjectCardProps {
   isSelectionMode?: boolean;
   isSelected?: boolean;
   onSelectChange?: (id: string, selected: boolean) => void;
+  isFavoriting?: boolean;
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
@@ -22,6 +23,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   isSelectionMode = false,
   isSelected = false,
   onSelectChange,
+  isFavoriting = false,
 }) => {
   const navigate = useNavigate();
 
@@ -36,10 +38,10 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   return (
     <div
       onClick={handleCardClick}
-      className={`bg-slate-900/80 border rounded-xl p-5 transition-all hover:shadow-xl hover:shadow-indigo-500/5 group flex flex-col justify-between relative overflow-hidden cursor-pointer ${
+      className={`bg-[var(--card-bg)] border rounded-xl p-5 transition-all hover:shadow-xl group flex flex-col justify-between relative overflow-hidden cursor-pointer ${
         isSelected
-          ? "border-indigo-500 ring-2 ring-indigo-500/40 bg-indigo-950/20"
-          : "border-slate-800 hover:border-indigo-500/40"
+          ? "border-indigo-500 ring-2 ring-indigo-500/40 bg-indigo-500/10"
+          : "border-[var(--border-color)] hover:border-indigo-500/40"
       }`}
     >
       {/* Top Bar Accent */}
@@ -61,7 +63,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                   onSelectChange(project._id, e.target.checked);
                 }}
                 onClick={(e) => e.stopPropagation()}
-                className="w-4 h-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500 cursor-pointer accent-indigo-600 shrink-0"
+                className="w-4 h-4 rounded border-[var(--border-color)] bg-[var(--input-bg)] text-indigo-600 focus:ring-indigo-500 cursor-pointer accent-indigo-600 shrink-0"
               />
             )}
             <div
@@ -74,11 +76,11 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
               <Link
                 to={`/projects/${project._id}`}
                 onClick={(e) => e.stopPropagation()}
-                className="font-semibold text-base text-slate-100 hover:text-indigo-400 transition-colors line-clamp-1"
+                className="font-semibold text-base text-[var(--text-primary)] hover:text-indigo-500 transition-colors line-clamp-1"
               >
                 {project.name}
               </Link>
-              <span className="text-[11px] text-slate-500 font-mono">
+              <span className="text-[11px] text-[var(--text-muted)] font-mono">
                 Updated {new Date(project.updatedAt).toLocaleDateString()}
               </span>
             </div>
@@ -86,6 +88,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
 
           <FavoriteButton
             isFavorite={project.favorite}
+            isLoading={isFavoriting}
             onToggle={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -95,21 +98,21 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         </div>
 
         {/* Description */}
-        <p className="text-xs text-slate-400 line-clamp-2 min-h-[32px] mb-4">
+        <p className="text-xs text-[var(--text-secondary)] line-clamp-2 min-h-[32px] mb-4">
           {project.description || "No description provided."}
         </p>
       </div>
 
       {/* Footer Meta & Actions */}
-      <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between">
+      <div className="pt-4 border-t border-[var(--border-color)] flex items-center justify-between">
         {/* Stats */}
-        <div className="flex items-center gap-4 text-xs text-slate-400">
+        <div className="flex items-center gap-4 text-xs text-[var(--text-secondary)]">
           <div className="flex items-center gap-1.5" title="Collections">
-            <Layers className="w-3.5 h-3.5 text-slate-500" />
+            <Layers className="w-3.5 h-3.5 text-[var(--text-muted)]" />
             <span>{project.collectionsCount || 0}</span>
           </div>
           <div className="flex items-center gap-1.5" title="Endpoints">
-            <Code2 className="w-3.5 h-3.5 text-slate-500" />
+            <Code2 className="w-3.5 h-3.5 text-[var(--text-muted)]" />
             <span>{project.endpointsCount || 0}</span>
           </div>
         </div>
@@ -122,7 +125,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
               onEdit(project);
             }}
             title="Edit Project"
-            className="p-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+            className="p-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] rounded-lg transition-colors cursor-pointer"
           >
             <Edit2 className="w-4 h-4" />
           </button>
@@ -132,7 +135,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
               onDelete(project);
             }}
             title="Delete Project"
-            className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
+            className="p-1.5 text-[var(--text-secondary)] hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -140,7 +143,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             to={`/projects/${project._id}`}
             onClick={(e) => e.stopPropagation()}
             title="View Details"
-            className="p-1.5 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-600/20 rounded-lg transition-colors cursor-pointer ml-1"
+            className="p-1.5 text-indigo-500 hover:text-indigo-600 hover:bg-indigo-500/10 rounded-lg transition-colors cursor-pointer ml-1"
           >
             <ArrowRight className="w-4 h-4" />
           </Link>

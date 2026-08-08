@@ -227,7 +227,7 @@ export const CollectionDetails: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="p-8 text-center text-slate-400 space-y-4">
+      <div className="p-8 text-center text-[var(--text-muted)] space-y-4">
         <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
         <p className="text-sm">Loading collection tree...</p>
       </div>
@@ -258,27 +258,27 @@ export const CollectionDetails: React.FC = () => {
       />
 
       {/* Collection Header Banner */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 relative">
+      <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl p-6 relative">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 rounded-xl shrink-0">
+            <div className="p-3 bg-indigo-500/10 text-indigo-500 border border-indigo-500/20 rounded-xl shrink-0">
               <Layers className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+              <h1 className="text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
                 <span>{collection.name}</span>
                 {collection.favorite && (
                   <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
                 )}
               </h1>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-[var(--text-secondary)] mt-0.5">
                 {collection.description || "No description provided."}
               </p>
               {projectObj && (
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="text-[11px] text-slate-500">Project:</span>
+                  <span className="text-[11px] text-[var(--text-muted)]">Project:</span>
                   <span
-                    className="px-2 py-0.5 rounded text-[11px] font-medium text-slate-200 border border-slate-700/60"
+                    className="px-2 py-0.5 rounded text-[11px] font-medium text-[var(--text-primary)] border border-[var(--border-color)]"
                     style={{ backgroundColor: `${projectObj.color || "#6366f1"}20` }}
                   >
                     {projectObj.name}
@@ -303,7 +303,7 @@ export const CollectionDetails: React.FC = () => {
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border transition-all cursor-pointer ${
                   isSelectionMode
                     ? "bg-indigo-600/20 text-indigo-400 border-indigo-500/40 hover:bg-indigo-600/30"
-                    : "bg-slate-800 text-slate-300 border-slate-700 hover:text-white"
+                    : "bg-[var(--bg-secondary)] text-[var(--text-secondary)] border-[var(--border-color)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
                 }`}
               >
                 <CheckSquare className="w-4 h-4" />
@@ -312,12 +312,12 @@ export const CollectionDetails: React.FC = () => {
             )}
 
             {isSelectionMode && totalItems > 0 && (
-              <label className="flex items-center gap-2 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-300 cursor-pointer hover:bg-slate-700 transition-colors select-none">
+              <label className="flex items-center gap-2 px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] cursor-pointer hover:bg-[var(--bg-hover)] transition-colors select-none">
                 <input
                   type="checkbox"
                   checked={isAllSelected}
                   onChange={handleSelectAll}
-                  className="w-4 h-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500 cursor-pointer accent-indigo-600"
+                  className="w-4 h-4 rounded border-[var(--border-color)] bg-[var(--input-bg)] text-indigo-600 focus:ring-indigo-500 cursor-pointer accent-indigo-600"
                 />
                 <span>Select All ({totalItems})</span>
               </label>
@@ -335,9 +335,9 @@ export const CollectionDetails: React.FC = () => {
 
             <button
               onClick={() => setIsImportModalOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-slate-700 rounded-lg text-xs font-medium transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-2 bg-[var(--bg-secondary)] hover:bg-[var(--bg-hover)] text-indigo-500 border border-[var(--border-color)] rounded-lg text-xs font-medium transition-colors cursor-pointer"
             >
-              <FolderInput className="w-4 h-4 text-indigo-400" />
+              <FolderInput className="w-4 h-4 text-indigo-500" />
               <span>Import API</span>
             </button>
 
@@ -347,9 +347,9 @@ export const CollectionDetails: React.FC = () => {
                 setParentFolderId(null);
                 setIsFolderModalOpen(true);
               }}
-              className="flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-medium transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-2 bg-[var(--bg-secondary)] hover:bg-[var(--bg-hover)] text-[var(--text-primary)] border border-[var(--border-color)] rounded-lg text-xs font-medium transition-colors cursor-pointer"
             >
-              <Folder className="w-4 h-4 text-indigo-400" />
+              <Folder className="w-4 h-4 text-indigo-500" />
               <span>New Folder</span>
             </button>
 
@@ -368,7 +368,7 @@ export const CollectionDetails: React.FC = () => {
       </div>
 
       {/* Collection Folder Tree & Endpoints Panel */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-5">
+      <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl p-5">
         <FolderTree
           folders={treeFolders}
           rootEndpoints={rootEndpoints}
