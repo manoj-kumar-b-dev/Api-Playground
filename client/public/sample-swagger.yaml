@@ -1,0 +1,76 @@
+openapi: 3.0.0
+info:
+  title: Sample Petstore & Product Catalog API
+  version: 1.0.0
+  description: OpenAPI 3.0 YAML Specification testing dynamic form fields.
+servers:
+  - url: https://petstore.example.com/v2
+    description: Public Petstore API
+paths:
+  /pets:
+    get:
+      summary: List all pets
+      operationId: listPets
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: status
+          in: query
+          description: Status values to filter by
+          required: false
+          schema:
+            type: string
+            enum: [available, pending, sold]
+            default: available
+      responses:
+        '200':
+          description: Array of pets
+    post:
+      summary: Add a new pet to the store
+      operationId: addPet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, category, status]
+              properties:
+                name:
+                  type: string
+                  example: Doggie
+                category:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    name:
+                      type: string
+                      example: Dogs
+                photoUrls:
+                  type: array
+                  items:
+                    type: string
+                    format: uri
+                tags:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                status:
+                  type: string
+                  enum: [available, pending, sold]
+                  default: available
+      responses:
+        '201':
+          description: Pet created successfully

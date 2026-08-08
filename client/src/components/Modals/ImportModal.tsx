@@ -32,6 +32,7 @@ interface ImportModalProps {
   defaultCollectionId?: string;
   onImportSuccess?: (importedEndpoints: ParsedImportEndpoint[]) => void;
   onLoadToWorkbench?: (endpoint: ParsedImportEndpoint) => void;
+  onOpenDynamicForm?: (specText: string) => void;
 }
 
 type ImportTab = "curl" | "openapi" | "doc" | "manual";
@@ -45,6 +46,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
   defaultCollectionId,
   onImportSuccess,
   onLoadToWorkbench,
+  onOpenDynamicForm,
 }) => {
   const [activeTab, setActiveTab] = useState<ImportTab>("curl");
   const [inputText, setInputText] = useState("");
@@ -300,11 +302,32 @@ export const ImportModal: React.FC<ImportModalProps> = ({
           {/* Input Area */}
           {activeTab !== "manual" ? (
             <div>
-              <label className="block text-xs font-medium text-[var(--text-primary)] mb-2">
-                {activeTab === "curl" && "Paste cURL Command:"}
-                {activeTab === "openapi" && "Paste OpenAPI 3.0 or Swagger 2.0 (JSON or YAML):"}
-                {activeTab === "doc" && "Paste API Raw Documentation or Markdown snippet:"}
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-xs font-medium text-[var(--text-primary)]">
+                  {activeTab === "curl" && "Paste cURL Command:"}
+                  {activeTab === "openapi" && "Paste OpenAPI 3.0 or Swagger 2.0 (JSON or YAML):"}
+                  {activeTab === "doc" && "Paste API Raw Documentation or Markdown snippet:"}
+                </label>
+                {activeTab === "openapi" && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        const res = await fetch("/sample-swagger.json");
+                        const data = await res.text();
+                        setInputText(data);
+                        toast.success("Loaded sample OpenAPI spec!");
+                      } catch {
+                        toast.error("Failed to load sample spec");
+                      }
+                    }}
+                    className="text-[11px] text-indigo-400 hover:text-indigo-300 font-medium underline flex items-center space-x-1 cursor-pointer"
+                  >
+                    <Sparkles className="w-3 h-3" />
+                    <span>Load Sample OpenAPI Spec</span>
+                  </button>
+                )}
+              </div>
               <textarea
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
@@ -415,6 +438,18 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                     Parsing Working ({parsedEndpoints.length} endpoint{parsedEndpoints.length > 1 ? "s" : ""} extracted)
                   </h3>
                 </div>
+                {activeTab === "openapi" && onOpenDynamicForm && (
+                  <button
+                    onClick={() => {
+                      onOpenDynamicForm(inputText);
+                      onClose();
+                    }}
+                    className="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-lg shadow transition flex items-center space-x-1.5 cursor-pointer"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Launch Dynamic Form Generator</span>
+                  </button>
+                )}
               </div>
 
               {/* Endpoint Cards List */}

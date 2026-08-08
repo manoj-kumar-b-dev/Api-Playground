@@ -42,6 +42,9 @@ import { PathParamEditor } from "../../components/request/PathParamEditor";
 import { BodyEditor } from "../../components/request/BodyEditor";
 import { AuthEditor } from "../../components/request/AuthEditor";
 import { ResponseViewer } from "../../components/response/ResponseViewer";
+import { DynamicForm } from "../../components/dynamic-form/DynamicForm";
+import { useDynamicFormStore } from "../../stores/useDynamicFormStore";
+import { Sparkles as SparklesIcon } from "lucide-react";
 
 function Apis() {
   const queryClient = useQueryClient();
@@ -62,6 +65,9 @@ function Apis() {
   const [deletingEndpoint, setDeletingEndpoint] = useState<EndpointData | null>(null);
 
   const [mobileTab, setMobileTab] = useState<"list" | "workbench">("list");
+  const [workbenchView, setWorkbenchView] = useState<"standard" | "dynamicForm">("standard");
+
+  const setRawSpec = useDynamicFormStore((s) => s.setRawSpec);
 
   // Request Store State
   const {
@@ -417,7 +423,42 @@ function Apis() {
         {/* Right Endpoint Workbench Editor (8 cols) */}
         <div className={`lg:col-span-8 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl flex flex-col h-full overflow-y-auto ${mobileTab === "workbench" ? "flex" : "hidden lg:flex"
           }`}>
-          {!activeEndpoint ? (
+          {/* Top Workbench View Mode Selector */}
+          <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--border-color)] bg-[var(--bg-secondary)] shrink-0">
+            <div className="flex items-center space-x-1">
+              <button
+                type="button"
+                onClick={() => setWorkbenchView("standard")}
+                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition cursor-pointer flex items-center space-x-1.5 ${
+                  workbenchView === "standard"
+                    ? "bg-indigo-600 text-white shadow-xs"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
+                }`}
+              >
+                <Code2 className="w-3.5 h-3.5" />
+                <span>Standard Request Editor</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setWorkbenchView("dynamicForm")}
+                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition cursor-pointer flex items-center space-x-1.5 ${
+                  workbenchView === "dynamicForm"
+                    ? "bg-purple-600 text-white shadow-xs"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
+                }`}
+              >
+                <SparklesIcon className="w-3.5 h-3.5 text-purple-300" />
+                <span>No-Code Dynamic Form</span>
+              </button>
+            </div>
+          </div>
+
+          {workbenchView === "dynamicForm" ? (
+            <div className="p-4 flex-1 overflow-y-auto">
+              <DynamicForm />
+            </div>
+          ) : !activeEndpoint ? (
             <div className="flex-1 flex items-center justify-center p-8">
               <EmptyState
                 icon={Code2}
@@ -677,6 +718,11 @@ function Apis() {
         }}
         onLoadToWorkbench={(ep: any) => {
           loadEndpointIntoWorkbench(ep as EndpointData);
+        }}
+        onOpenDynamicForm={(specText) => {
+          setRawSpec(specText);
+          setWorkbenchView("dynamicForm");
+          setMobileTab("workbench");
         }}
       />
 

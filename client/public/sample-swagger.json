@@ -1,0 +1,336 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Comprehensive E-Commerce & User API",
+    "version": "1.0.0",
+    "description": "Sample OpenAPI specification showcasing all field types, nested objects, dynamic arrays, binary file uploads, and polymorphic schemas."
+  },
+  "servers": [
+    {
+      "url": "https://api.example.com/v1",
+      "description": "Production Server"
+    },
+    {
+      "url": "https://staging-api.example.com/v1",
+      "description": "Staging Server"
+    }
+  ],
+  "paths": {
+    "/users/{userId}": {
+      "get": {
+        "summary": "Get User Profile",
+        "operationId": "getUserProfile",
+        "description": "Retrieve detailed user profile information using path and query parameters.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the user",
+            "schema": {
+              "type": "string",
+              "example": "usr_992384"
+            }
+          },
+          {
+            "name": "includeDetails",
+            "in": "query",
+            "required": false,
+            "description": "Include extra profile details",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
+            "name": "X-Client-ID",
+            "in": "header",
+            "required": true,
+            "description": "Client Application ID",
+            "schema": {
+              "type": "string",
+              "example": "client_abc123"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile data"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update User Information",
+        "operationId": "updateUser",
+        "description": "Update user details including personal info, address, preferences, and roles.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "User update payload",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated successfully"
+          }
+        }
+      }
+    },
+    "/users/avatar": {
+      "post": {
+        "summary": "Upload Profile Avatar Image",
+        "operationId": "uploadAvatar",
+        "description": "Upload a profile avatar binary image file.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Image file (PNG, JPG)"
+                  },
+                  "caption": {
+                    "type": "string",
+                    "description": "Short description for avatar image"
+                  }
+                },
+                "required": ["avatar"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Image uploaded successfully"
+          }
+        }
+      }
+    },
+    "/orders": {
+      "post": {
+        "summary": "Create New Order",
+        "operationId": "createOrder",
+        "description": "Create an order with dynamic items array and payment polymorphic schemas.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Order created successfully"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserUpdateRequest": {
+        "type": "object",
+        "required": ["firstName", "lastName", "email", "role"],
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 50,
+            "example": "Manoj"
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 50,
+            "example": "Kumar"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "manoj@example.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "minLength": 8,
+            "description": "User login account password"
+          },
+          "website": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://manoj.dev"
+          },
+          "age": {
+            "type": "integer",
+            "minimum": 18,
+            "maximum": 120,
+            "example": 25
+          },
+          "rating": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 5,
+            "example": 4.8
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date",
+            "example": "1999-05-15"
+          },
+          "lastLogin": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-08-08T19:30:00Z"
+          },
+          "role": {
+            "type": "string",
+            "enum": ["Admin", "Developer", "Manager", "User"],
+            "default": "Developer"
+          },
+          "isSubscribed": {
+            "type": "boolean",
+            "default": true
+          },
+          "bio": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "Short bio or notes about user"
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of user interest tags"
+          }
+        }
+      },
+      "Address": {
+        "type": "object",
+        "required": ["street", "city", "country"],
+        "properties": {
+          "street": {
+            "type": "string",
+            "example": "123 Tech Park Road"
+          },
+          "city": {
+            "type": "string",
+            "example": "Bengaluru"
+          },
+          "state": {
+            "type": "string",
+            "example": "Karnataka"
+          },
+          "zipCode": {
+            "type": "string",
+            "example": "560001"
+          },
+          "country": {
+            "type": "string",
+            "example": "India"
+          }
+        }
+      },
+      "CreateOrderRequest": {
+        "type": "object",
+        "required": ["orderNumber", "totalAmount", "items", "paymentMethod"],
+        "properties": {
+          "orderNumber": {
+            "type": "string",
+            "example": "ORD-2026-8891"
+          },
+          "totalAmount": {
+            "type": "number",
+            "minimum": 1,
+            "example": 199.99
+          },
+          "items": {
+            "type": "array",
+            "description": "List of order items",
+            "items": {
+              "type": "object",
+              "required": ["productId", "quantity", "unitPrice"],
+              "properties": {
+                "productId": {
+                  "type": "string",
+                  "example": "prod_keyboard_01"
+                },
+                "quantity": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "example": 2
+                },
+                "unitPrice": {
+                  "type": "number",
+                  "example": 99.99
+                }
+              }
+            }
+          },
+          "paymentMethod": {
+            "type": "object",
+            "description": "Choose payment option variant",
+            "oneOf": [
+              {
+                "title": "Credit Card Payment",
+                "type": "object",
+                "required": ["cardNumber", "cvv", "expiry"],
+                "properties": {
+                  "cardNumber": {
+                    "type": "string",
+                    "example": "4111-2222-3333-4444"
+                  },
+                  "cvv": {
+                    "type": "string",
+                    "maxLength": 4,
+                    "example": "123"
+                  },
+                  "expiry": {
+                    "type": "string",
+                    "example": "12/28"
+                  }
+                }
+              },
+              {
+                "title": "UPI / Net Banking",
+                "type": "object",
+                "required": ["upiId"],
+                "properties": {
+                  "upiId": {
+                    "type": "string",
+                    "example": "user@okaxis"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
