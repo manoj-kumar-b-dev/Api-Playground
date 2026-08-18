@@ -12,7 +12,7 @@ import type { ResponseData, RequestError } from '../types/response.types';
 import { requestService } from '../services/request.service';
 import { parsePathParams } from '../utils/requestBuilder';
 
-import type { AiAnalysisResult } from '../types/ai.types';
+import type { AiExplanationResult } from '../types/ai.types';
 import { aiService } from '../services/aiService';
 
 export interface RequestStoreState {
@@ -33,8 +33,9 @@ export interface RequestStoreState {
   error: RequestError | null;
   abortController: AbortController | null;
 
-  // AI Insights state
-  aiInsights: AiAnalysisResult | null;
+  // AI Explanation state
+  aiExplanation: AiExplanationResult | null;
+  aiInsights?: AiExplanationResult | null; // Compatibility
   isAnalyzing: boolean;
   analysisError: string | null;
 
@@ -44,7 +45,8 @@ export interface RequestStoreState {
   setActiveTab: (tab: RequestTabType) => void;
   setUseProxy: (useProxy: boolean) => void;
   toggleUseProxy: () => void;
-  generateAiInsights: () => Promise<void>;
+  generateAiExplanation: () => Promise<void>;
+  generateAiInsights?: () => Promise<void>; // Compatibility
 
   // Query Params actions
   setQueryParams: (params: KeyValuePair[]) => void;
@@ -137,6 +139,7 @@ export const useRequestStore = create<RequestStoreState>((set, get) => ({
   error: null,
   abortController: null,
 
+  aiExplanation: null,
   aiInsights: null,
   isAnalyzing: false,
   analysisError: null,
@@ -150,7 +153,7 @@ export const useRequestStore = create<RequestStoreState>((set, get) => ({
   setUseProxy: (useProxy) => set({ useProxy }),
   toggleUseProxy: () => set((state) => ({ useProxy: !state.useProxy })),
 
-  generateAiInsights: async () => {
+  generateAiExplanation: async () => {
     const { response, method, url, queryParams, headers, body, isAnalyzing } = get();
     if (!response || isAnalyzing) return;
 
@@ -192,13 +195,16 @@ export const useRequestStore = create<RequestStoreState>((set, get) => ({
         },
       };
 
-      const result = await aiService.analyzeResponse(payload);
-      set({ aiInsights: result, isAnalyzing: false });
+      const result = await aiService.explainResponse(payload);
+      set({ aiExplanation: result, aiInsights: result, isAnalyzing: false });
     } catch (err: any) {
-      console.error('Failed to generate AI insights:', err);
-      const msg = err.response?.data?.message || err.message || 'Failed to generate AI insights. Please try again.';
+      console.error('Failed to generate AI explanation:', err);
+      const msg = err.response?.data?.message || err.message || 'Failed to generate AI explanation. Please try again.';
       set({ analysisError: msg, isAnalyzing: false });
     }
+  },
+  generateAiInsights: async () => {
+    return get().generateAiExplanation();
   },
 
   // Query Params
@@ -370,7 +376,7 @@ export const useRequestStore = create<RequestStoreState>((set, get) => ({
     }
 
     const controller = new AbortController();
-    set({ loading: true, response: null, error: null, aiInsights: null, analysisError: null, abortController: controller });
+    set({ loading: true, response: null, error: null, aiExplanation: null, aiInsights: null, analysisError: null, abortController: controller });
 
     const result = await requestService.execute({
       method,
@@ -413,6 +419,7 @@ export const useRequestStore = create<RequestStoreState>((set, get) => ({
       loading: false,
       response: null,
       error: null,
+      aiExplanation: null,
       aiInsights: null,
       isAnalyzing: false,
       analysisError: null,

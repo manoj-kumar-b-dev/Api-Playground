@@ -1,44 +1,9 @@
-export interface FieldDescription {
-  field: string;
-  description: string;
+export interface AiExplanationResult {
+  explanation: string;
+  mode: 'explanation' | 'debug';
 }
 
-export interface SecurityWarning {
-  field: string;
-  issue: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
-}
-
-export interface PerformanceSuggestion {
-  category: string;
-  suggestion: string;
-}
-
-export interface BestPractice {
-  topic: string;
-  recommendation: string;
-}
-
-export interface TestCase {
-  name: string;
-  type: 'success' | 'error' | 'edge';
-  description: string;
-}
-
-export interface AiAnalysisResult {
-  summary: string;
-  dataStructure: string;
-  fieldDescriptions: FieldDescription[];
-  securityWarnings: SecurityWarning[];
-  performanceSuggestions: PerformanceSuggestion[];
-  bestPractices: BestPractice[];
-  typescriptInterface: string;
-  jsonSchema: Record<string, any>;
-  endpointDescription: string;
-  testCases: TestCase[];
-}
-
-export interface AiAnalysisPayload {
+export interface AiExplanationPayload {
   request: {
     method: string;
     url: string;
@@ -53,3 +18,13 @@ export interface AiAnalysisPayload {
     body?: any;
   };
 }
+
+// Legacy compatibility types
+export interface FieldDescription { field: string; description: string; }
+export interface SecurityWarning { field: string; issue: string; severity: 'low' | 'medium' | 'high' | 'critical'; }
+export interface PerformanceSuggestion { category: string; suggestion: string; }
+export interface BestPractice { topic: string; recommendation: string; }
+export interface TestCase { name: string; type: 'success' | 'error' | 'edge'; description: string; }
+
+export type AiAnalysisResult = AiExplanationResult;
+export type AiAnalysisPayload = AiExplanationPayload;

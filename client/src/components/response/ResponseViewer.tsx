@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { ResponseData, RequestError } from '../../types/response.types';
 import { StatusBar } from './StatusBar';
 import { PrettyJsonViewer } from './PrettyJsonViewer';
 import { RawViewer } from './RawViewer';
 import { HeaderTable } from './HeaderTable';
-import { AiInsights } from './AiInsights';
+import { AiExplanation } from './AiExplanation';
 import {
   Code2,
   FileText,
   List,
   Sparkles,
+  Bug,
   AlertTriangle,
   WifiOff,
   Clock,
@@ -17,6 +18,7 @@ import {
   ServerOff,
   Send,
   Loader2,
+  Eye,
 } from 'lucide-react';
 
 interface ResponseViewerProps {
@@ -30,7 +32,25 @@ export const ResponseViewer: React.FC<ResponseViewerProps> = ({
   error,
   loading,
 }) => {
-  const [activeTab, setActiveTab] = useState<'pretty' | 'raw' | 'headers' | 'ai'>('pretty');
+  const [activeTab, setActiveTab] = useState<'pretty' | 'raw' | 'preview' | 'headers' | 'ai'>('pretty');
+
+  const isHtmlResponse = React.useMemo(() => {
+    if (!response) return false;
+    const contentType = response.contentType || '';
+    if (contentType.toLowerCase().includes('html')) return true;
+    if (typeof response.data === 'string' && response.data.trim().toLowerCase().startsWith('<')) return true;
+    return false;
+  }, [response]);
+
+  useEffect(() => {
+    if (response) {
+      if (!response.isJson) {
+        setActiveTab('raw');
+      } else {
+        setActiveTab('pretty');
+      }
+    }
+  }, [response]);
 
   if (loading) {
     return (
@@ -142,6 +162,7 @@ export const ResponseViewer: React.FC<ResponseViewerProps> = ({
   }
 
   const headerCount = Object.keys(response.headers || {}).length;
+  const isSuccess = response.status >= 200 && response.status < 300;
 
   return (
     <div className="flex flex-col bg-[var(--card-bg)] rounded-lg border border-[var(--border-color)] shadow-xl">
@@ -181,6 +202,21 @@ export const ResponseViewer: React.FC<ResponseViewerProps> = ({
           <span>Raw Response</span>
         </button>
 
+        {isHtmlResponse && (
+          <button
+            type="button"
+            onClick={() => setActiveTab('preview')}
+            className={`flex items-center gap-2 px-4 py-2.5 text-xs font-medium transition-colors outline-none cursor-pointer shrink-0 ${
+              activeTab === 'preview'
+                ? 'text-indigo-500 border-b-2 border-indigo-500 font-semibold'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+            }`}
+          >
+            <Eye className="h-3.5 w-3.5" />
+            <span>HTML Preview</span>
+          </button>
+        )}
+
         <button
           type="button"
           onClick={() => setActiveTab('headers')}
@@ -199,12 +235,25 @@ export const ResponseViewer: React.FC<ResponseViewerProps> = ({
           onClick={() => setActiveTab('ai')}
           className={`flex items-center gap-2 px-4 py-2.5 text-xs font-medium transition-colors outline-none cursor-pointer shrink-0 ${
             activeTab === 'ai'
-              ? 'text-purple-500 border-b-2 border-purple-500 font-bold'
-              : 'text-[var(--text-secondary)] hover:text-purple-500'
+              ? isSuccess
+                ? 'text-purple-500 border-b-2 border-purple-500 font-bold'
+                : 'text-rose-500 border-b-2 border-rose-500 font-bold'
+              : isSuccess
+                ? 'text-[var(--text-secondary)] hover:text-purple-500'
+                : 'text-[var(--text-secondary)] hover:text-rose-500'
           }`}
         >
-          <Sparkles className="h-3.5 w-3.5 text-purple-500" />
-          <span>AI Insights</span>
+          {isSuccess ? (
+            <>
+              <Sparkles className="h-3.5 w-3.5 text-purple-500" />
+              <span>AI Explanation</span>
+            </>
+          ) : (
+            <>
+              <Bug className="h-3.5 w-3.5 text-rose-500" />
+              <span>Debug with AI</span>
+            </>
+          )}
         </button>
       </div>
 
@@ -212,8 +261,23 @@ export const ResponseViewer: React.FC<ResponseViewerProps> = ({
       <div className="w-full">
         {activeTab === 'pretty' && <PrettyJsonViewer data={response.data} />}
         {activeTab === 'raw' && <RawViewer data={response.data} contentType={response.contentType} />}
+        {activeTab === 'preview' && isHtmlResponse && (
+          <div className="flex flex-col bg-[var(--card-bg)] rounded-b-lg border-t border-[var(--border-color)] overflow-hidden">
+            <div className="p-2 bg-[var(--bg-secondary)] border-b border-[var(--border-color)] text-[11px] text-[var(--text-muted)] font-mono flex items-center justify-between px-4">
+              <span>Rendered HTML Output</span>
+            </div>
+            <div className="w-full h-[400px] bg-white">
+              <iframe
+                title="HTML Response Preview"
+                srcDoc={typeof response.data === 'string' ? response.data : String(response.data)}
+                sandbox="allow-same-origin"
+                className="w-full h-full border-none"
+              />
+            </div>
+          </div>
+        )}
         {activeTab === 'headers' && <HeaderTable headers={response.headers} />}
-        {activeTab === 'ai' && <AiInsights />}
+        {activeTab === 'ai' && <AiExplanation />}
       </div>
     </div>
   );

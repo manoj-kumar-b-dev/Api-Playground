@@ -94,6 +94,39 @@ option {
   color: var(--text-primary) !important;
 }
 
+/* Smooth Theme Transition for background, text, and border colors */
+:root {
+  transition: background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1), color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body,
+header,
+aside,
+main,
+nav,
+section,
+div,
+button,
+input,
+textarea,
+select,
+p,
+span,
+h1, h2, h3, h4, h5, h6,
+a {
+  transition: background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hide browser default password reveal and clear buttons */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
 /* Base theme styles */
 body {
   background-color: var(--bg-primary);

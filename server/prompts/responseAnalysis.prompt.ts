@@ -1,49 +1,55 @@
-import { AiAnalysisRequest } from "../types/ai.types";
+import { AiExplanationRequest } from "../types/ai.types";
 
-export const SYSTEM_PROMPT = `You are an expert Senior API Architect and Security Engineer.
-Your job is to analyze HTTP API Request and Response pairs and return a structured JSON analysis.
+export const EXPLANATION_SYSTEM_PROMPT = `You are an expert Senior API Architect and Technical Writer.
+Your task is to provide a clean, comprehensive, developer-friendly PLAIN TEXT EXPLANATION of an HTTP API Endpoint request and response.
 
-CRITICAL REQUIREMENT:
-You MUST return ONLY a raw valid JSON object. Do NOT wrap it in markdown code blocks like \`\`\`json or \`\`\`. Do NOT include any intro or conversational text.
+CRITICAL INSTRUCTIONS:
+- Write in pure readable Markdown / plain text format.
+- DO NOT return JSON objects, forms, card grids, schemas, or complex widgets.
+- Use clear headings (e.g. ## Endpoint Summary, ## Response Breakdown, ## Key Observations), readable paragraphs, and bullet points.
+- Keep the language engaging, precise, and easy for any developer to digest.`;
 
-The JSON MUST conform strictly to this structure:
-{
-  "summary": "Short explanation of what happened, whether request succeeded, and purpose of response",
-  "dataStructure": "Detailed description of root object, arrays, nested objects, and key fields",
-  "fieldDescriptions": [
-    { "field": "fieldName", "description": "Explanation of property" }
-  ],
-  "securityWarnings": [
-    { "field": "fieldNameOrHeader", "issue": "Detected security issue or sensitive data like passwords, JWT, keys, emails, card numbers", "severity": "low|medium|high|critical" }
-  ],
-  "performanceSuggestions": [
-    { "category": "Pagination|Payload Size|Nesting", "suggestion": "Actionable suggestion to optimize performance" }
-  ],
-  "bestPractices": [
-    { "topic": "Caching|Compression|Sorting|Filtering", "recommendation": "Recommendation for API client/server design" }
-  ],
-  "typescriptInterface": "Strongly typed TypeScript interface generated based on the response payload (e.g. export interface ResponseData { ... })",
-  "jsonSchema": { "$schema": "http://json-schema.org/draft-07/schema#", "type": "object", "properties": {} },
-  "endpointDescription": "Short documentation of endpoint purpose, returned data, and typical usage",
-  "testCases": [
-    { "name": "Test case name", "type": "success|error|edge", "description": "Description of scenario to test" }
-  ]
-}`;
+export const DEBUG_SYSTEM_PROMPT = `You are an expert Senior API Security & Debugging Engineer.
+Your task is to debug an HTTP API Error (4xx/5xx status or failed request) and provide clear, actionable PLAIN TEXT instructions on HOW TO FIX THIS ERROR.
 
-export const buildResponseAnalysisPrompt = (payload: AiAnalysisRequest): string => {
-  return `Analyze the following HTTP Request and Response pair:
+CRITICAL INSTRUCTIONS:
+- Write in pure readable Markdown / plain text format.
+- DO NOT return JSON objects, forms, card grids, schemas, or complex widgets.
+- Break your debugging explanation into clear sections:
+  1. ## Error Summary (What failed, status code, error message)
+  2. ## Root Cause Analysis (Why this error happened based on request headers, auth, URL, parameters, or body)
+  3. ## How to Fix This Error (Step-by-step actionable instructions for the developer to resolve the issue)
+- Keep the tone helpful, clear, direct, and solution-focused.`;
 
-[REQUEST]
+export const buildResponsePrompt = (payload: AiExplanationRequest): { systemPrompt: string; userPrompt: string; mode: "explanation" | "debug" } => {
+  const isSuccess = payload.response.status >= 200 && payload.response.status < 300;
+  const mode = isSuccess ? "explanation" : "debug";
+  const systemPrompt = isSuccess ? EXPLANATION_SYSTEM_PROMPT : DEBUG_SYSTEM_PROMPT;
+
+  const userPrompt = `Analyze the following HTTP Request and Response pair:
+
+[REQUEST DETAILS]
 Method: ${payload.request.method}
 URL: ${payload.request.url}
 Headers: ${JSON.stringify(payload.request.headers || {}, null, 2)}
-QueryParams: ${JSON.stringify(payload.request.queryParams || {}, null, 2)}
+Query Params: ${JSON.stringify(payload.request.queryParams || {}, null, 2)}
 Body: ${JSON.stringify(payload.request.body ?? null, null, 2)}
 
-[RESPONSE]
-Status: ${payload.response.status} ${payload.response.statusText || ""}
+[RESPONSE DETAILS]
+Status Code: ${payload.response.status} ${payload.response.statusText || ""}
 Headers: ${JSON.stringify(payload.response.headers || {}, null, 2)}
-Body: ${JSON.stringify(payload.response.body ?? null, null, 2)}
+Response Body: ${JSON.stringify(payload.response.body ?? null, null, 2)}
 
-Provide your analysis in pure JSON strictly adhering to the specified schema.`;
+${isSuccess 
+  ? "Please explain what this endpoint does, the structure of the returned response, and key details in plain text format." 
+  : "Please analyze why this HTTP error occurred, explain the root cause, and provide clear step-by-step instructions on how to fix this error in plain text format."
+}`;
+
+  return { systemPrompt, userPrompt, mode };
+};
+
+// Aliases for compatibility
+export const SYSTEM_PROMPT = EXPLANATION_SYSTEM_PROMPT;
+export const buildResponseAnalysisPrompt = (payload: AiExplanationRequest): string => {
+  return buildResponsePrompt(payload).userPrompt;
 };

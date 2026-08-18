@@ -1,41 +1,6 @@
-export interface FieldDescription {
-  field: string;
-  description: string;
-}
-
-export interface SecurityWarning {
-  field: string;
-  issue: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
-}
-
-export interface PerformanceSuggestion {
-  category: string;
-  suggestion: string;
-}
-
-export interface BestPractice {
-  topic: string;
-  recommendation: string;
-}
-
-export interface TestCase {
-  name: string;
-  type: 'success' | 'error' | 'edge';
-  description: string;
-}
-
-export interface AiAnalysisResponse {
-  summary: string;
-  dataStructure: string;
-  fieldDescriptions: FieldDescription[];
-  securityWarnings: SecurityWarning[];
-  performanceSuggestions: PerformanceSuggestion[];
-  bestPractices: BestPractice[];
-  typescriptInterface: string;
-  jsonSchema: Record<string, any>;
-  endpointDescription: string;
-  testCases: TestCase[];
+export interface AiExplanationResponse {
+  explanation: string;
+  mode: 'explanation' | 'debug';
 }
 
 export interface RequestPayloadData {
@@ -53,7 +18,11 @@ export interface ResponsePayloadData {
   body?: any;
 }
 
-export interface AiAnalysisRequest {
+export interface AiExplanationRequest {
   request: RequestPayloadData;
   response: ResponsePayloadData;
 }
+
+// Backwards compatibility alias
+export type AiAnalysisRequest = AiExplanationRequest;
+export type AiAnalysisResponse = AiExplanationResponse;

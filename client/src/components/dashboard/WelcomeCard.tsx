@@ -1,13 +1,12 @@
 import { useAuthStore } from "../../store/useAuthStore";
-import { Sparkles } from "lucide-react";
 
 function WelcomeCard() {
   const user = useAuthStore((state) => state.user);
   const displayName = user?.name
     ? `${user.name} 👋`
     : user?.email
-    ? `${user.email.split("@")[0]} 👋`
-    : "Developer 👋";
+      ? `${user.email.split("@")[0]} 👋`
+      : "Developer 👋";
 
   return (
     <div className="relative overflow-hidden rounded-2xl bg-[var(--card-bg)] border border-[var(--border-color)] p-6 md:p-8 shadow-xl">
@@ -18,8 +17,6 @@ function WelcomeCard() {
       <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-indigo-500">
-            <Sparkles className="w-4 h-4 text-amber-400" />
-            <span>Developer Workspace</span>
           </div>
           <h1 className="text-2xl md:text-3xl font-extrabold text-[var(--text-primary)]">
             Welcome back, <span className="text-indigo-500">{displayName}</span>

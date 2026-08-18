@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { useTheme } from "../Context/ThemeContext";
 import { SearchBar } from "../components/SearchBar";
-import { Bell, Sun, Moon, User as UserIcon, Code2, Menu, Search, X } from "lucide-react";
+import { ThemeToggle } from "../components/ThemeToggle";
+import { User as UserIcon, Code2, Menu, Search, X } from "lucide-react";
 
 interface NavBarProps {
   onToggleMobileMenu?: () => void;
@@ -10,7 +10,6 @@ interface NavBarProps {
 
 function NavBar({ onToggleMobileMenu }: NavBarProps) {
   const user = useAuthStore((state) => state.user);
-  const { theme, toggleTheme } = useTheme();
   const [showMobileSearch, setShowMobileSearch] = useState(false);
 
   return (
@@ -40,7 +39,7 @@ function NavBar({ onToggleMobileMenu }: NavBarProps) {
         </div>
       </div>
 
-      {/* Right Controls: Theme Toggle, Notifications, Profile */}
+      {/* Right Controls: Theme Toggle, Profile */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         {/* Mobile Search Toggle */}
         <button
@@ -51,21 +50,7 @@ function NavBar({ onToggleMobileMenu }: NavBarProps) {
           {showMobileSearch ? <X className="w-4 h-4" /> : <Search className="w-4 h-4" />}
         </button>
 
-        <button
-          onClick={toggleTheme}
-          title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-          className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] rounded-lg transition-colors cursor-pointer relative"
-        >
-          {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-        </button>
-
-        <button
-          title="Notifications"
-          className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] rounded-lg transition-colors cursor-pointer relative"
-        >
-          <Bell className="w-4 h-4" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-indigo-500"></span>
-        </button>
+        <ThemeToggle />
 
         <div className="h-4 w-px bg-[var(--border-color)] mx-0.5 sm:mx-1"></div>
 

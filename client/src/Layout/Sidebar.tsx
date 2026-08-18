@@ -47,7 +47,6 @@ function Sidebar({ isOpen = false, onClose }: SidebarProps) {
               API Playground
               <Sparkles className="w-3.5 h-3.5 text-amber-400 fill-amber-400/20" />
             </span>
-            <span className="text-[10px] text-[var(--text-secondary)] font-medium">Developer Hub</span>
           </div>
         </div>
 

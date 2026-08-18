@@ -1,9 +1,14 @@
 import { api } from "../service/api";
-import type { AiAnalysisPayload, AiAnalysisResult } from "../types/ai.types";
+import type { AiExplanationPayload, AiExplanationResult } from "../types/ai.types";
 
 export const aiService = {
-  analyzeResponse: async (payload: AiAnalysisPayload): Promise<AiAnalysisResult> => {
-    const res = await api.post<{ success: boolean; data: AiAnalysisResult }>("/ai/analyze", payload);
+  explainResponse: async (payload: AiExplanationPayload): Promise<AiExplanationResult> => {
+    const res = await api.post<{ success: boolean; data: AiExplanationResult }>("/ai/explain", payload);
     return res.data.data;
+  },
+
+  // Alias
+  analyzeResponse: async (payload: AiExplanationPayload): Promise<AiExplanationResult> => {
+    return aiService.explainResponse(payload);
   },
 };
