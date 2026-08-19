@@ -23,6 +23,10 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(cors());
 
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", message: "ReqForge API is healthy and connected" });
+});
+
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/projects", projectRouter);
