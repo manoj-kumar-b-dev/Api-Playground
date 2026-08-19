@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { SearchBar } from "../components/SearchBar";
 import { ThemeToggle } from "../components/ThemeToggle";
-import { User as UserIcon, Code2, Menu, Search, X } from "lucide-react";
+import { User as UserIcon, Menu, Search, X } from "lucide-react";
 
 interface NavBarProps {
   onToggleMobileMenu?: () => void;
@@ -27,10 +27,10 @@ function NavBar({ onToggleMobileMenu }: NavBarProps) {
 
         {/* Mobile Brand */}
         <div className="flex items-center gap-2 md:hidden truncate">
-          <div className="p-1.5 bg-indigo-600 rounded-lg text-white shrink-0">
-            <Code2 className="w-4 h-4" />
+          <div className="p-1 bg-indigo-600/20 border border-indigo-500/30 rounded-lg shrink-0 flex items-center justify-center">
+            <img src="/logo.png" alt="ReqForge Logo" className="w-5 h-5 object-contain drop-shadow-[0_0_6px_rgba(99,102,241,0.5)]" />
           </div>
-          <span className="font-bold text-sm text-[var(--text-primary)] truncate">API Playground</span>
+          <span className="font-bold text-sm text-[var(--text-primary)] truncate">ReqForge</span>
         </div>
 
         {/* Desktop Search Bar */}

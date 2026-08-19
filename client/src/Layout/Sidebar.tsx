@@ -37,14 +37,14 @@ function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const sidebarContent = (
     <div className="flex flex-col h-full bg-[var(--bg-secondary)] text-[var(--text-primary)] border-r border-[var(--border-color)]">
       {/* Brand Header */}
-      <div className="flex items-center justify-between h-16 px-6 border-b border-[var(--border-color)]">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-xl text-white shadow-lg shadow-indigo-500/20">
-            <Code2 className="w-5 h-5" />
+      <div className="flex items-center justify-between h-16 px-4 border-b border-[var(--border-color)]">
+        <div className="flex items-center gap-9      ">
+          <div className="px-2.5 py-1 bg-gradient-to-tr from-indigo-600/20 via-purple-600/15 to-violet-500/20 border border-indigo-500/30 rounded-lg shadow-lg shadow-indigo-500/10 flex items-center justify-center">
+            <img src="/logo.png" alt="ReqForge Logo" className="h-6 w-6 object-contain drop-shadow-[0_0_8px_rgba(99,102,241,0.5)]" />
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-base tracking-wide text-[var(--text-primary)] flex items-center gap-1.5">
-              API Playground
+              ReqForge
               <Sparkles className="w-3.5 h-3.5 text-amber-400 fill-amber-400/20" />
             </span>
           </div>
@@ -62,7 +62,7 @@ function Sidebar({ isOpen = false, onClose }: SidebarProps) {
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto">
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           return (
@@ -71,13 +71,13 @@ function Sidebar({ isOpen = false, onClose }: SidebarProps) {
               to={item.path}
               onClick={onClose}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${isActive
+                `flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all ${isActive
                   ? "bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 shadow-sm"
                   : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
                 }`
               }
             >
-              <Icon className="w-5 h-5" />
+              <Icon className="w-[18px] h-[18px] shrink-0" />
               <span>{item.name}</span>
             </NavLink>
           );
@@ -85,12 +85,12 @@ function Sidebar({ isOpen = false, onClose }: SidebarProps) {
       </nav>
 
       {/* Sidebar Footer with Logout Button */}
-      <div className="p-4 border-t border-[var(--border-color)] space-y-3">
+      <div className="p-3 border-t border-[var(--border-color)] space-y-2">
         <button
           onClick={logout}
-          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-[var(--text-secondary)] hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all cursor-pointer"
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-[var(--text-secondary)] hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all cursor-pointer"
         >
-          <LogOut className="w-5 h-5" />
+          <LogOut className="w-[18px] h-[18px] shrink-0" />
           <span>Logout</span>
         </button>
 
@@ -104,7 +104,7 @@ function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex w-64 shrink-0 h-full">
+      <aside className="hidden md:flex w-52 shrink-0 h-full">
         {sidebarContent}
       </aside>
 
@@ -118,7 +118,7 @@ function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           />
 
           {/* Sliding Drawer Panel */}
-          <div className="relative w-72 max-w-[80vw] h-full shadow-2xl z-10 animate-in slide-in-from-left duration-200">
+          <div className="relative w-60 max-w-[80vw] h-full shadow-2xl z-10 animate-in slide-in-from-left duration-200">
             {sidebarContent}
           </div>
         </div>

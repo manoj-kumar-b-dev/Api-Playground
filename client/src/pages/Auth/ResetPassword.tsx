@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { api } from "../../service/api";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Sparkles, Lock, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle2, Loader2, KeyRound } from "lucide-react";
+import { Sparkles, Lock, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 function ResetPassword() {
@@ -80,11 +80,11 @@ function ResetPassword() {
 
         {/* Brand Logo & Header */}
         <div className="flex flex-col items-center text-center mb-6">
-          <div className="p-3 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-2xl text-white shadow-lg shadow-indigo-500/25 mb-3 flex items-center justify-center">
-            <KeyRound className="w-7 h-7" />
+          <div className="px-3 py-2.5 bg-gradient-to-tr from-indigo-600/20 via-purple-600/15 to-violet-500/20 border border-indigo-500/30 rounded-2xl shadow-xl shadow-indigo-500/10 mb-3 flex items-center justify-center">
+            <img src="/logo.png" alt="ReqForge Logo" className="h-10 w-10 object-contain drop-shadow-[0_0_14px_rgba(99,102,241,0.6)]" />
           </div>
           <div className="flex items-center gap-1.5 text-xs font-semibold tracking-wider uppercase text-indigo-400 mb-1">
-            <span>API Playground</span>
+            <span>ReqForge</span>
             <Sparkles className="w-3.5 h-3.5 text-amber-400 fill-amber-400/20" />
           </div>
           <h1 className="text-2xl font-extrabold text-white tracking-tight">Reset Your Password</h1>
@@ -203,4 +203,4 @@ function ResetPassword() {
   );
 }
 
-export default ResetPassword;
+export default ResetPassword;

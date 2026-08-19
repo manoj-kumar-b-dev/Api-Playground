@@ -1,0 +1,9 @@
+{
+  "name": "reqforge-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "vercel-build": "npm --prefix server install && npm --prefix client install && npm --prefix client run build",
+    "build": "npm --prefix server run build && npm --prefix client run build"
+  }
+}

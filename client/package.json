@@ -24,6 +24,7 @@
     "react-hook-form": "^7.81.0",
     "react-hot-toast": "^2.6.0",
     "react-router-dom": "^7.18.1",
+    "reqforge-app": "file:..",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.2",
     "yaml": "^2.9.0",

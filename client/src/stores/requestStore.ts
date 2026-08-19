@@ -104,7 +104,7 @@ const defaultAuth: AuthConfig = {
 
 const defaultBody: BodyConfig = {
   mode: 'none',
-  json: '{\n  "name": "API Playground",\n  "version": "1.0.0"\n}',
+  json: '{\n  "name": "ReqForge",\n  "version": "1.0.0"\n}',
   formData: [
     { id: 'fd-1', key: '', value: '', type: 'text', enabled: true },
   ],

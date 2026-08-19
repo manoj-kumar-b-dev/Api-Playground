@@ -19,13 +19,13 @@ export const sendResetPasswordEmail = async (email: string, resetUrl: string) =>
       }
     })
     await transporter.sendMail({
-      from: `API PLAYGROUND ${process.env.SMTP_USER}`,
+      from: `ReqForge <${process.env.SMTP_USER}>`,
       to: email,
-      subject: `Password Reset Reques`,
+      subject: `Password Reset Request — ReqForge`,
       html: `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h2>Password Reset Request</h2>
-        <p>You requested a password reset for your API Playground account.</p>
+        <p>You requested a password reset for your ReqForge account.</p>
         <p>Please click the link below to reset your password. This link is valid for 15 minutes:</p>
         <p style="margin: 20px 0;">
           <a href="${resetUrl}" style="background-color: #4F46E5; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">

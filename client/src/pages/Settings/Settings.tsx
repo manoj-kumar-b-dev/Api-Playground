@@ -57,7 +57,7 @@ function Settings() {
           </div>
 
           <p className="text-xs text-[var(--text-secondary)]">
-            Choose how API Playground looks to you. Select a theme below or use the quick toggle above.
+            Choose how ReqForge looks to you. Select a theme below or use the quick toggle above.
           </p>
 
           <div className="grid grid-cols-2 gap-3">
