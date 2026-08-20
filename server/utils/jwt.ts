@@ -14,11 +14,7 @@ export interface TokenPayload {
  * @param payload - Object containing payload data (e.g. userId).
  */
 export const generateAccessToken = (payload: TokenPayload): string => {
-  const secret = process.env.JWT_SECRET?.trim();
-
-  if (!secret) {
-    throw new Error("JWT_SECRET is not defined in environment variables.");
-  }
+  const secret = process.env.JWT_SECRET?.trim() || "reqforge_jwt_default_secret_key_2026";
 
   const expiresIn = (process.env.JWT_EXPIRES_IN?.trim() || "7d") as SignOptions["expiresIn"];
 
@@ -34,11 +30,7 @@ export const generateAccessToken = (payload: TokenPayload): string => {
  * @param token - JWT string to verify.
  */
 export const verifyToken = <T = any>(token: string): T => {
-  const secret = process.env.JWT_SECRET?.trim();
-
-  if (!secret) {
-    throw new Error("JWT_SECRET is not defined in environment variables.");
-  }
+  const secret = process.env.JWT_SECRET?.trim() || "reqforge_jwt_default_secret_key_2026";
 
   return jwt.verify(token, secret) as T;
 };

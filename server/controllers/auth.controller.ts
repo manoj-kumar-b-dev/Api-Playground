@@ -92,11 +92,13 @@ export const login = async (req: Request, res: Response) => {
     })
 
   }
-  catch (error) {
+  catch (error: any) {
+    console.error("Login controller error:", error);
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error", error
-    })
+      message: error?.message || "Internal Server Error during login",
+      error: error instanceof Error ? error.message : String(error)
+    });
   }
 
 }
