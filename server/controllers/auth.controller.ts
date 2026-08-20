@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import User from "../models/user.model";
-import mongoose from "mongoose";
 import { hashPassword, comparePassword } from "../utils/bcrypt";
 import { generateAccessToken } from "../utils/jwt";
 import { generateResetToken } from "../utils/crypto";
@@ -11,14 +10,6 @@ import { OAuth2Client } from "google-auth-library";
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const register = async (req: Request, res: Response) => {
-
-  // Guard: fail fast if DB is not connected instead of hanging
-  if (mongoose.connection.readyState !== 1) {
-    return res.status(503).json({
-      success: false,
-      message: "Database not connected. Please try again shortly.",
-    });
-  }
 
   try {
     const { name, email, password } = req.body;
@@ -58,12 +49,6 @@ export const register = async (req: Request, res: Response) => {
 }
 
 export const login = async (req: Request, res: Response) => {
-  if (mongoose.connection.readyState !== 1) {
-    return res.status(503).json({
-      success: false,
-      message: "Database not connected. Please try again shortly.",
-    });
-  }
 
   try {
     const { email, password } = req.body;
@@ -177,12 +162,6 @@ export const resetPassword = async (req: Request, res: Response) => {
 }
 
 export const googleLogin = async (req: Request, res: Response) => {
-  if (mongoose.connection.readyState !== 1) {
-    return res.status(503).json({
-      success: false,
-      message: "Database not connected. Please try again shortly.",
-    });
-  }
 
   try {
     const { credential, idToken, accessToken, access_token } = req.body;
