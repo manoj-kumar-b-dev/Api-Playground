@@ -6,7 +6,6 @@ import { generateAccessToken } from "../utils/jwt";
 import { generateResetToken } from "../utils/crypto";
 import { sendResetPasswordEmail } from "../utils/email";
 import crypto from "crypto";
-import { success } from "zod";
 import { OAuth2Client } from "google-auth-library";
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
