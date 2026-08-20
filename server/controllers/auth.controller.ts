@@ -59,6 +59,13 @@ export const register = async (req: Request, res: Response) => {
 }
 
 export const login = async (req: Request, res: Response) => {
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({
+      success: false,
+      message: "Database not connected. Please try again shortly.",
+    });
+  }
+
   try {
     const { email, password } = req.body;
 
