@@ -7,85 +7,106 @@ import { sendResetPasswordEmail } from "../utils/email";
 import crypto from "crypto";
 import { OAuth2Client } from "google-auth-library";
 
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const getGoogleClient = () => {
+  return new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+};
 
 export const register = async (req: Request, res: Response) => {
-
   try {
-    const { name, email, password } = req.body;
-    const existingUser = await User.findOne({ email });
+    const { name, email, password } = req.body || {};
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Name, email, and password are required.",
+      });
+    }
+
+    const cleanEmail = String(email).trim().toLowerCase();
+    const existingUser = await User.findOne({ email: cleanEmail });
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: "Email is already registered"
-      })
+        message: "Email is already registered",
+      });
     }
+
     const hashedPassword = await hashPassword(password);
     const user = await User.create({
-      name,
-      email,
-      password: hashedPassword
-    })
-    const accessToken = generateAccessToken({ userId: user._id.toString() })
+      name: String(name).trim(),
+      email: cleanEmail,
+      password: hashedPassword,
+    });
+
+    const accessToken = generateAccessToken({ userId: user._id.toString() });
     return res.status(201).json({
       success: true,
-      message: "User registered succesfully",
+      message: "User registered successfully",
       data: {
         id: user._id,
         name: user.name,
-        email: user.email
+        email: user.email,
       },
-      accessToken
-    })
-  }
-  catch (error) {
+      accessToken,
+    });
+  } catch (error: any) {
+    console.error("Register controller error:", error);
     return res.status(500).json({
-      message: "Server Error",
       success: false,
-      error
-    })
+      message: error?.message || "Server Error during registration",
+      error: error instanceof Error ? error.message : String(error),
+    });
   }
-
-}
+};
 
 export const login = async (req: Request, res: Response) => {
-
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body || {};
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required.",
+      });
+    }
 
-    const user = await User.findOne({ email });
+    const cleanEmail = String(email).trim().toLowerCase();
+    const user = await User.findOne({ email: cleanEmail });
     if (!user || !user.password) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+      });
     }
 
-    const isPasswordMatch = await comparePassword(password, user.password);
+    const isPasswordMatch = await comparePassword(String(password), user.password);
     if (!isPasswordMatch) {
-      return res.status(401).json({ message: "Invalid email or password" })
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+      });
     }
-    const accessToken = generateAccessToken({ userId: user._id.toString() })
+
+    const accessToken = generateAccessToken({ userId: user._id.toString() });
 
     return res.status(200).json({
       success: true,
-      message: "Login Successfull! Credentials verified",
+      message: "Login successful! Credentials verified",
       user: {
         id: user._id,
         name: user.name,
-        email: user.email
+        email: user.email,
       },
-      accessToken
-    })
-
-  }
-  catch (error: any) {
+      accessToken,
+    });
+  } catch (error: any) {
     console.error("Login controller error:", error);
     return res.status(500).json({
       success: false,
       message: error?.message || "Internal Server Error during login",
-      error: error instanceof Error ? error.message : String(error)
+      error: error instanceof Error ? error.message : String(error),
     });
   }
+};
 
-}
 export const forgotPassword = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
@@ -179,7 +200,7 @@ export const googleLogin = async (req: Request, res: Response) => {
 
     if (tokenToVerify) {
       try {
-        const ticket = await googleClient.verifyIdToken({
+        const ticket = await getGoogleClient().verifyIdToken({
           idToken: tokenToVerify,
           audience: process.env.GOOGLE_CLIENT_ID,
         });

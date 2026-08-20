@@ -26,19 +26,37 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(cors());
 
-app.get("/api/health", (req, res) => {
+app.get(["/api/health", "/health"], (req, res) => {
   res.json({ status: "ok", message: "ReqForge API is healthy and connected" });
 });
 
-app.use("/api/auth", authRouter);
-app.use("/api/users", userRouter);
-app.use("/api/projects", projectRouter);
-app.use("/api/collections", collectionRouter);
-app.use("/api/folders", folderRouter);
-app.use("/api/endpoints", endpointRouter);
-app.use("/api/search", searchRouter);
-app.use("/api/mock", mockRouter);
-app.use("/api/proxy", proxyRouter);
-app.use("/api/ai", aiRouter);
+app.use(["/api/auth", "/auth"], authRouter);
+app.use(["/api/users", "/users"], userRouter);
+app.use(["/api/projects", "/projects"], projectRouter);
+app.use(["/api/collections", "/collections"], collectionRouter);
+app.use(["/api/folders", "/folders"], folderRouter);
+app.use(["/api/endpoints", "/endpoints"], endpointRouter);
+app.use(["/api/search", "/search"], searchRouter);
+app.use(["/api/mock", "/mock"], mockRouter);
+app.use(["/api/proxy", "/proxy"], proxyRouter);
+app.use(["/api/ai", "/ai"], aiRouter);
+
+// 404 Handler
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `API Route Not Found: ${req.method} ${req.originalUrl}`,
+  });
+});
+
+// Global Error Handler
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error("Express Error Handler:", err);
+  res.status(err.status || 500).json({
+    success: false,
+    message: err?.message || "Internal Server Error",
+    error: err instanceof Error ? err.message : String(err),
+  });
+});
 
 export default app;
