@@ -1,12 +1,24 @@
 import axios from "axios";
 
+export const getApiBaseUrl = (): string => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl && envUrl.trim() !== "") {
+    const trimmed = envUrl.trim().replace(/\/+$/, "");
+    if (!trimmed.endsWith("/api")) {
+      return `${trimmed}/api`;
+    }
+    return trimmed;
+  }
+  return import.meta.env.DEV ? "http://localhost:5000/api" : "/api";
+};
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "http://localhost:5000/api" : "/api"),
+  baseURL: getApiBaseUrl(),
   timeout: 10000,
   headers: {
     "Content-Type": "application/json"
   }
-})
+});
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -27,4 +39,4 @@ api.interceptors.response.use(
     }
     return Promise.reject(error);
   }
-);
+);

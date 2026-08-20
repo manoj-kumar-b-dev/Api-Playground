@@ -2,8 +2,9 @@ import axios, { AxiosError, type AxiosRequestConfig } from 'axios';
 import type { HttpMethod, KeyValuePair, AuthConfig, BodyConfig } from '../types/request.types';
 import type { ResponseData, RequestError } from '../types/response.types';
 import { buildFinalUrl, buildHeaders, buildBody, formatBytes } from '../utils/requestBuilder';
+import { getApiBaseUrl } from '../service/api';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = getApiBaseUrl();
 
 export interface ExecuteParams {
   method: HttpMethod;

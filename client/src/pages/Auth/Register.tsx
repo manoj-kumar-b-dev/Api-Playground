@@ -23,7 +23,7 @@ function Register() {
       setServerSuccess(null);
       setIsGoogleLoading(true);
       try {
-        const response = await api.post("auth/google", {
+        const response = await api.post("/auth/google", {
           accessToken: tokenResponse.access_token,
         });
         const result = response.data;
@@ -54,7 +54,7 @@ function Register() {
     setServerError(null);
     setServerSuccess(null);
     try {
-      const response = await api.post("auth/register", data);
+      const response = await api.post("/auth/register", data);
       const result = response.data;
       login(result.data, result.accessToken);
       setServerSuccess(result?.message || "Registration successful!");
