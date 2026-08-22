@@ -35,12 +35,12 @@ function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   }, [location.pathname]);
 
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-[var(--bg-secondary)] text-[var(--text-primary)] border-r border-[var(--border-color)]">
+    <div className="flex flex-col h-full w-52 bg-[var(--bg-secondary)] text-[var(--text-primary)] border-r border-[var(--border-color)]">
       {/* Brand Header */}
       <div className="flex items-center justify-between h-16 px-4 border-b border-[var(--border-color)]">
-        <div className="flex items-center gap-9      ">
-          <div className="px-2.5 py-1 bg-gradient-to-tr from-indigo-600/20 via-purple-600/15 to-violet-500/20 border border-indigo-500/30 rounded-lg shadow-lg shadow-indigo-500/10 flex items-center justify-center">
-            <img src="/logo.png" alt="ReqForge Logo" className="h-6 w-6 object-contain drop-shadow-[0_0_8px_rgba(99,102,241,0.5)]" />
+        <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center">
+            <img src="/logo.png" alt="ReqForge Logo" className="h-8 w-8 object-contain" />
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-base tracking-wide text-[var(--text-primary)] flex items-center gap-1.5">

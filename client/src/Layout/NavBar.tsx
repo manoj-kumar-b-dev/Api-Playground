@@ -27,8 +27,8 @@ function NavBar({ onToggleMobileMenu }: NavBarProps) {
 
         {/* Mobile Brand */}
         <div className="flex items-center gap-2 md:hidden truncate">
-          <div className="p-1 bg-indigo-600/20 border border-indigo-500/30 rounded-lg shrink-0 flex items-center justify-center">
-            <img src="/logo.png" alt="ReqForge Logo" className="w-5 h-5 object-contain drop-shadow-[0_0_6px_rgba(99,102,241,0.5)]" />
+          <div className="p-1.5 bg-indigo-600/20 border border-indigo-500/30 rounded-xl shrink-0 flex items-center justify-center">
+            <img src="/logo.png" alt="ReqForge Logo" className="w-6 h-6 object-contain drop-shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
           </div>
           <span className="font-bold text-sm text-[var(--text-primary)] truncate">ReqForge</span>
         </div>

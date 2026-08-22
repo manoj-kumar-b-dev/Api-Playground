@@ -66,8 +66,8 @@ function ForgetPassword() {
 
         {/* Brand Logo & Header */}
         <div className="flex flex-col items-center text-center mb-6">
-          <div className="px-3 py-2.5 bg-gradient-to-tr from-indigo-600/20 via-purple-600/15 to-violet-500/20 border border-indigo-500/30 rounded-2xl shadow-xl shadow-indigo-500/10 mb-3 flex items-center justify-center">
-            <img src="/logo.png" alt="ReqForge Logo" className="h-10 w-10 object-contain drop-shadow-[0_0_14px_rgba(99,102,241,0.6)]" />
+          <div className="p-3 bg-gradient-to-tr from-indigo-600/25 via-purple-600/20 to-violet-500/25 border border-indigo-500/40 rounded-2xl shadow-xl shadow-indigo-500/20 mb-3 flex items-center justify-center transition-transform hover:scale-105 duration-300">
+            <img src="/logo.png" alt="ReqForge Logo" className="h-14 w-auto max-w-[120px] object-contain filter drop-shadow-[0_0_16px_rgba(129,140,248,0.7)]" />
           </div>
           <div className="flex items-center gap-1.5 text-xs font-semibold tracking-wider uppercase text-indigo-400 mb-1">
             <span>ReqForge</span>
