@@ -2,7 +2,7 @@
 
   # 🚀 API Playground
 
-  **Next-Generation AI-Powered API Workbench & Testing Platform**
+  **AI-Powered API Workbench & Testing Platform**
 
   *A Postman-like full-stack API client featuring intelligent LLM response analysis, real-time HTTP debugging, mock sandboxes, workspace folder organization, and auto type generation.*
 
